@@ -8,8 +8,7 @@
     "lat": 54.9722,
     "lng": -1.5997,
     "ticketUrl": "",
-    "status": "live",
-    "notes": "SAMPLE DATA - a past gig"
+    "status": "live"
   },
   {
     "id": 1,
@@ -17,11 +16,10 @@
     "venue": "Brudenell Social Club",
     "city": "Leeds",
     "postcode": "LS6 1JB",
-    "lat": 53.8077,
-    "lng": -1.5651,
+    "lat": 53.8117,
+    "lng": -1.5699,
     "ticketUrl": "",
-    "status": "live",
-    "notes": "SAMPLE DATA - replace with real gigs"
+    "status": "live"
   },
   {
     "id": 2,
@@ -32,8 +30,7 @@
     "lat": 53.4836,
     "lng": -2.2349,
     "ticketUrl": "",
-    "status": "live",
-    "notes": "SAMPLE DATA - replace with real gigs"
+    "status": "live"
   },
   {
     "id": 5,
@@ -55,8 +52,7 @@
     "lat": 53.377,
     "lng": -1.46,
     "ticketUrl": "",
-    "status": "cancelled",
-    "notes": "SAMPLE DATA - shows how a cancelled gig looks"
+    "status": "cancelled"
   },
   {
     "id": 6,
@@ -111,6 +107,6 @@
     "lat": 53.8117,
     "lng": -1.5699,
     "ticketUrl": "",
-    "status": "live"
+    "status": "cancelled"
   }
 ]
