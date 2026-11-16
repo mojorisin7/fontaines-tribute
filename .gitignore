@@ -7,3 +7,4 @@ dist/
 
 # Client paperwork (quotes, contracts) stays out of the repo
 docs/
+!.env.example
