@@ -14,7 +14,7 @@ const tickerItems = soon
   .map((g) => `${g.city} ${formatDate(g.date, { year: undefined })}`);
 ---
 
-<Base title="Home">
+<Base title="Home" overlayHeader>
   <HeroSlider />
 
   {tickerItems.length > 0 && <Ticker items={tickerItems} />}

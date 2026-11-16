@@ -8,10 +8,14 @@ export const site = {
   tagline: 'Tribute band tagline goes here. Replace with the client\'s own wording.',
   description: 'A tribute to Fontaines D.C. Live dates, music, videos and booking.',
   bookingEmail: 'bookings@example.com',
+  // Footer icons, shown in this order. The email icon uses bookingEmail. Set each href to the
+  // band's own profile; remove a line to hide that icon. PLACEHOLDER links until the band sends them.
   socials: [
-    { label: 'Instagram', href: 'https://instagram.com/' },
-    { label: 'Facebook', href: 'https://facebook.com/' },
-    { label: 'TikTok', href: 'https://tiktok.com/' },
+    { icon: 'email', label: 'Email' },
+    { icon: 'facebook', label: 'Facebook', href: 'https://facebook.com/' },
+    { icon: 'instagram', label: 'Instagram', href: 'https://instagram.com/' },
+    { icon: 'youtube', label: 'YouTube', href: 'https://youtube.com/' },
+    { icon: 'tiktok', label: 'TikTok', href: 'https://tiktok.com/' },
   ],
 };
 
@@ -26,15 +30,15 @@ export const nav = [
 
 // Home page slider: one entry per slide, shown in order. `position` sets which part of
 // the image stays in view when it is cropped (CSS object-position).
+// eyebrow: 'next-gig' shows "Next stop: <city>, <date>" with a pin, from the next gig in gigs.json.
 // PLACEHOLDER IMAGES: slide-1 to slide-4 are Fontaines D.C. artwork, used only to preview
 // the layout locally. Replace with the band's own photos before the site goes live.
 export const slides = [
   {
     image: '/photos/hero/slide-1.jpg',
     position: 'center',
-    eyebrow: 'Live tribute',
+    eyebrow: 'next-gig',
     title: site.bandName,
-    text: site.tagline,
     actions: [
       { label: 'Live dates', href: '/live', primary: true },
       { label: 'Book the band', href: '/book' },
@@ -45,7 +49,6 @@ export const slides = [
     position: '35% center',
     eyebrow: 'On tour',
     title: 'Live dates',
-    text: 'Dates across the North this winter. Find a show near you.',
     actions: [{ label: 'See all dates', href: '/live', primary: true }],
   },
   {
@@ -53,7 +56,6 @@ export const slides = [
     position: '30% center',
     eyebrow: 'Music',
     title: 'The set',
-    text: 'The songs we play, from every album.',
     actions: [
       { label: 'See the set', href: '/music', primary: true },
       { label: 'Watch videos', href: '/videos' },
@@ -64,7 +66,6 @@ export const slides = [
     position: 'center',
     eyebrow: 'Bookings',
     title: 'Book the band',
-    text: 'Venues, festivals and private parties.',
     actions: [{ label: 'Book the band', href: '/book', primary: true }],
   },
 ];

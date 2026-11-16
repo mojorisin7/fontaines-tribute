@@ -3,6 +3,11 @@
 // Autoplays every few seconds, pauses on hover or keyboard focus, and stays put
 // for visitors who have reduced motion switched on.
 import { slides } from '../config';
+import { nextGig, formatDate } from '../lib/gigs';
+import Logo from './Logo.astro';
+
+const next = nextGig();
+const nextStop = next ? `Next stop: ${next.city}, ${formatDate(next.date, { year: undefined })}` : null;
 ---
 
 <section class="hero-slider full-bleed" aria-roledescription="carousel" aria-label="Highlights" data-interval="6000">
@@ -22,9 +27,20 @@ import { slides } from '../config';
         fetchpriority={i === 0 ? 'high' : undefined}
       />
       <div class="slide-inner">
-        <p class="eyebrow">{s.eyebrow}</p>
+        {s.eyebrow === 'next-gig' ? (
+          nextStop && (
+            <p class="slide-eyebrow">
+              <svg class="pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor" /></svg>
+              {nextStop}
+            </p>
+          )
+        ) : (
+          <p class="slide-eyebrow">{s.eyebrow}</p>
+        )}
+        {/* On phones the header has no logo, so it sits here instead (hidden on larger screens). */}
+        <div class="slide-logo" aria-hidden="true"><Logo class="slide-logo-img" /></div>
         {i === 0 ? <h1 class="slide-title">{s.title}</h1> : <p class="slide-title">{s.title}</p>}
-        <p class="slide-text">{s.text}</p>
+        {s.text && <p class="slide-text">{s.text}</p>}
         <div class="hero-actions">
           {s.actions.map((a) => (
             <a class:list={['button', { primary: a.primary }]} href={a.href} tabindex={i === 0 ? undefined : '-1'}>
@@ -37,13 +53,19 @@ import { slides } from '../config';
   ))}
 
   {slides.length > 1 && (
-    <div class="slider-dots">
-      {slides.map((_, i) => (
-        <button type="button" class="dot" aria-label={`Show slide ${i + 1}`} aria-current={i === 0 ? 'true' : undefined}>
-          {String(i + 1).padStart(2, '0')}
-        </button>
-      ))}
-    </div>
+    <>
+      <button type="button" class="slider-arrow prev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+      </button>
+      <button type="button" class="slider-arrow next" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+      </button>
+      <div class="slider-dots">
+        {slides.map((_, i) => (
+          <button type="button" class="dot" aria-label={`Show slide ${i + 1}`} aria-current={i === 0 ? 'true' : undefined}></button>
+        ))}
+      </div>
+    </>
   )}
 </section>
 
@@ -76,6 +98,8 @@ import { slides } from '../config';
     };
 
     dots.forEach((d, i) => d.addEventListener('click', () => { show(i); start(); }));
+    root.querySelector('.slider-arrow.prev')?.addEventListener('click', () => { show(current - 1); start(); });
+    root.querySelector('.slider-arrow.next')?.addEventListener('click', () => { show(current + 1); start(); });
     root.addEventListener('mouseenter', stop);
     root.addEventListener('mouseleave', start);
     root.addEventListener('focusin', stop);

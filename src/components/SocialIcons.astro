@@ -1,0 +1,43 @@
+---
+// Row of social icons for the footer, from site.socials in src/config.ts.
+// Icons are simple line/solid drawings in the band blue; cut-outs use the page background.
+import { site } from '../config';
+
+type Social = { icon: string; label: string; href?: string };
+
+const paths: Record<string, string> = {
+  email:
+    '<rect x="2.5" y="5" width="19" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>' +
+    '<path d="M3 6.5l9 6.5 9-6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+  facebook:
+    '<circle cx="12" cy="12" r="10.5" fill="currentColor"/>' +
+    '<path d="M13.3 22.4v-7.6h2.6l.4-3h-3v-1.9c0-.9.3-1.5 1.5-1.5h1.6V5.7a21 21 0 0 0-2.3-.1c-2.3 0-3.9 1.4-3.9 4v2.2H7.6v3h2.6v7.6z" fill="var(--bg, #000)"/>',
+  instagram:
+    '<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>' +
+    '<circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>' +
+    '<circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/>',
+  youtube:
+    '<rect x="1.5" y="5" width="21" height="14" rx="4" fill="currentColor"/>' +
+    '<path d="M10 8.8v6.4l5.5-3.2z" fill="var(--bg, #000)"/>',
+  tiktok:
+    '<path d="M16.2 2.5c.4 2.3 1.9 4 4.3 4.3v3.3a8 8 0 0 1-4.2-1.3v6.6a6 6 0 1 1-6-6c.3 0 .7 0 1 .1v3.4a2.7 2.7 0 1 0 1.8 2.5V2.5z" fill="currentColor"/>',
+};
+
+const items = (site.socials as Social[])
+  .map((s) => ({
+    ...s,
+    href: s.icon === 'email' ? `mailto:${site.bookingEmail}` : s.href,
+    external: s.icon !== 'email',
+  }))
+  .filter((s) => s.href && paths[s.icon]);
+---
+
+<ul class="socials">
+  {items.map((s) => (
+    <li>
+      <a href={s.href} aria-label={s.label} title={s.label} {...(s.external && { rel: 'noopener', target: '_blank' })}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" set:html={paths[s.icon]} />
+      </a>
+    </li>
+  ))}
+</ul>

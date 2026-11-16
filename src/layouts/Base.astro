@@ -3,13 +3,16 @@ import '../styles/global.css';
 import { site, nav } from '../config';
 import { nextGig, formatDate } from '../lib/gigs';
 import Logo from '../components/Logo.astro';
+import SocialIcons from '../components/SocialIcons.astro';
 
 interface Props {
   title: string;
   description?: string;
+  // Home page: header sits transparent over the slider and turns into the blue bar on scroll.
+  overlayHeader?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const { title, description = site.description, overlayHeader = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const year = new Date().getFullYear();
 const next = nextGig();
@@ -24,19 +27,22 @@ const next = nextGig();
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
     <title>{title} | {site.bandName}</title>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    {next && (
+    {next && !overlayHeader && (
       <div class="promo-bar">
         <a href="/live">Next gig: {next.city}, {formatDate(next.date, { year: undefined })}</a>
       </div>
     )}
-    <header class="site-header">
+    <header class:list={['site-header', { overlay: overlayHeader }]}>
+      <button type="button" class="menu-toggle" aria-label="Open menu" aria-controls="menu-drawer" aria-expanded="false">
+        <span></span><span></span>
+      </button>
       <a class="brand" href="/"><Logo class="brand-logo" /></a>
-      <nav aria-label="Main">
+      <nav class="nav-desktop" aria-label="Main">
         {nav.map((item) => (
           <a href={item.href} class:list={{ 'nav-cta': item.cta }} aria-current={path === item.href ? 'page' : undefined}>
             {item.label}
@@ -44,15 +50,25 @@ const next = nextGig();
         ))}
       </nav>
     </header>
+    <dialog class="menu-drawer" id="menu-drawer" aria-label="Menu">
+      <div class="menu-drawer-inner" tabindex="-1" autofocus>
+        <button type="button" class="menu-close" aria-label="Close menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" /></svg>
+        </button>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((item) => (
+              <li><a href={item.href} aria-current={path === item.href ? 'page' : undefined}>{item.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </dialog>
     <main id="main">
       <slot />
     </main>
     <footer class="site-footer">
-      <ul class="socials">
-        {site.socials.map((s) => (
-          <li><a href={s.href} rel="noopener" target="_blank">{s.label}</a></li>
-        ))}
-      </ul>
+      <SocialIcons />
       <p>
         Booking: <a href={`mailto:${site.bookingEmail}`}>{site.bookingEmail}</a>
       </p>
@@ -60,5 +76,35 @@ const next = nextGig();
         &copy; {year}. Unofficial tribute site, not affiliated with Fontaines D.C.
       </p>
     </footer>
+
+    <script>
+      // Mobile menu: a modal <dialog>, so Escape, focus and screen readers behave without extra code.
+      const drawer = document.querySelector<HTMLDialogElement>('#menu-drawer');
+      const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      if (drawer && toggle) {
+        toggle.addEventListener('click', () => {
+          drawer.showModal();
+          toggle.setAttribute('aria-expanded', 'true');
+        });
+        drawer.querySelector('.menu-close')?.addEventListener('click', () => drawer.close());
+        // A click on the dialog itself (not its contents) is a click on the dimmed area beside the menu.
+        drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
+        drawer.addEventListener('close', () => toggle.setAttribute('aria-expanded', 'false'));
+      }
+    </script>
+
+    {overlayHeader && (
+      <script>
+        // Swap the see-through header for the solid blue bar once the slider has scrolled away.
+        const header = document.querySelector<HTMLElement>('.site-header.overlay');
+        const hero = document.querySelector<HTMLElement>('.hero-slider');
+        if (header && hero) {
+          const update = () => header.classList.toggle('scrolled', hero.getBoundingClientRect().bottom <= header.offsetHeight);
+          update();
+          window.addEventListener('scroll', update, { passive: true });
+          window.addEventListener('resize', update);
+        }
+      </script>
+    )}
   </body>
 </html>
