@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import GigList from '../components/GigList.astro';
 import Ticker from '../components/Ticker.astro';
 import HeroSlider from '../components/HeroSlider.astro';
+import Testimonials from '../components/Testimonials.astro';
 import { loadGigs, upcomingGigs, nextGig, formatDate } from '../lib/gigs';
 
 const gigs = loadGigs();
@@ -27,19 +28,24 @@ const tickerItems = soon
       </div>
       {next.ticketUrl
         ? <a class="button primary" href={next.ticketUrl} rel="noopener" target="_blank">Tickets</a>
-        : <a class="button" href="/gigs">Details</a>}
+        : <a class="button" href="/live">Details</a>}
     </section>
   )}
 
   <section>
-    <h2>Live <a href="/gigs">Show all dates</a></h2>
+    <h2>Live <a href="/live">Show all dates</a></h2>
     <GigList gigs={soon} />
   </section>
 
   <section>
-    <h2>Gallery <a href="/gallery">See photos</a></h2>
-    <div class="gallery-grid">
-      {[1, 2, 3].map((n) => <div class="placeholder">PHOTO {n}</div>)}
-    </div>
+    <h2>What people say <a href="/testimonials">Read more</a></h2>
+    <Testimonials limit={2} />
+  </section>
+
+  <section class="book-banner">
+    <p class="eyebrow">Bookings</p>
+    <p class="book-banner-title">Book the band</p>
+    <p>Venues, festivals and private parties.</p>
+    <a class="button primary" href="/book">Get in touch</a>
   </section>
 </Base>

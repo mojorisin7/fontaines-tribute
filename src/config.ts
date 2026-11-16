@@ -6,7 +6,7 @@ export const site = {
   // Replace with the tribute band's own logo before the site goes live.
   logo: { image: '/logo/temp-logo.png', main: 'Fontaines', suffix: 'D.C.', tag: 'Tribute' },
   tagline: 'Tribute band tagline goes here. Replace with the client\'s own wording.',
-  description: 'A tribute to Fontaines D.C. Live dates, photos and booking.',
+  description: 'A tribute to Fontaines D.C. Live dates, music, videos and booking.',
   bookingEmail: 'bookings@example.com',
   socials: [
     { label: 'Instagram', href: 'https://instagram.com/' },
@@ -17,10 +17,11 @@ export const site = {
 
 export const nav = [
   { href: '/', label: 'Home' },
-  { href: '/gigs', label: 'Gigs' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/live', label: 'Live' },
+  { href: '/music', label: 'Music' },
+  { href: '/videos', label: 'Videos' },
+  { href: '/testimonials', label: 'Testimonials' },
+  { href: '/book', label: 'Book The Band', cta: true },
 ];
 
 // Home page slider: one entry per slide, shown in order. `position` sets which part of
@@ -35,8 +36,8 @@ export const slides = [
     title: site.bandName,
     text: site.tagline,
     actions: [
-      { label: 'Live dates', href: '/gigs', primary: true },
-      { label: 'Book the band', href: '/contact' },
+      { label: 'Live dates', href: '/live', primary: true },
+      { label: 'Book the band', href: '/book' },
     ],
   },
   {
@@ -45,15 +46,18 @@ export const slides = [
     eyebrow: 'On tour',
     title: 'Live dates',
     text: 'Dates across the North this winter. Find a show near you.',
-    actions: [{ label: 'See all gigs', href: '/gigs', primary: true }],
+    actions: [{ label: 'See all dates', href: '/live', primary: true }],
   },
   {
     image: '/photos/hero/slide-3.jpg',
     position: '30% center',
-    eyebrow: 'Gallery',
-    title: 'From the floor',
-    text: 'Photos from recent shows.',
-    actions: [{ label: 'View photos', href: '/gallery', primary: true }],
+    eyebrow: 'Music',
+    title: 'The set',
+    text: 'The songs we play, from every album.',
+    actions: [
+      { label: 'See the set', href: '/music', primary: true },
+      { label: 'Watch videos', href: '/videos' },
+    ],
   },
   {
     image: '/photos/hero/slide-4.jpg',
@@ -61,6 +65,6 @@ export const slides = [
     eyebrow: 'Bookings',
     title: 'Book the band',
     text: 'Venues, festivals and private parties.',
-    actions: [{ label: 'Get in touch', href: '/contact', primary: true }],
+    actions: [{ label: 'Book the band', href: '/book', primary: true }],
   },
 ];

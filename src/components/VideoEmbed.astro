@@ -1,0 +1,30 @@
+---
+// YouTube video that loads only when clicked: shows the thumbnail first, so the page
+// stays fast and nothing is fetched from YouTube until the visitor presses play.
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<div class="video" data-id={id} data-title={title}>
+  <button type="button" class="video-play" aria-label={`Play video: ${title}`}>
+    <img src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`} alt="" loading="lazy" />
+    <span class="video-play-icon" aria-hidden="true"></span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.video').forEach((el) => {
+    el.querySelector('button')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${el.dataset.id}?autoplay=1`;
+      iframe.title = el.dataset.title || 'Video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      el.replaceChildren(iframe);
+    });
+  });
+</script>

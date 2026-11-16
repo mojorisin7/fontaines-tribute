@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import videos from '../data/videos.json';
+
+// Edit src/data/videos.json. Each entry: { "url": "https://youtu.be/...", "title": "Starburster, live at the Brudenell" }
+// Any YouTube link works (watch, youtu.be, shorts or embed).
+interface Video { url: string; title: string }
+
+const youtubeId = (url: string) =>
+  url.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/)([\w-]{11})/)?.[1];
+
+const list = (videos as Video[])
+  .map((v) => ({ ...v, id: youtubeId(v.url) }))
+  .filter((v): v is Video & { id: string } => Boolean(v.id));
+---
+
+<Base title="Videos" description="Live videos of the band.">
+  <h1>Videos</h1>
+  {list.length === 0 ? (
+    <>
+      <p class="muted">Videos coming soon.</p>
+      <div class="video-grid">
+        {[1, 2, 3, 4].map((n) => <div class="placeholder video-placeholder">VIDEO {n}</div>)}
+      </div>
+    </>
+  ) : (
+    <div class="video-grid">
+      {list.map((v) => (
+        <figure>
+          <VideoEmbed id={v.id} title={v.title} />
+          <figcaption>{v.title}</figcaption>
+        </figure>
+      ))}
+    </div>
+  )}
+</Base>

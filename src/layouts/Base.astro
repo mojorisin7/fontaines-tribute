@@ -31,14 +31,14 @@ const next = nextGig();
     <a class="skip-link" href="#main">Skip to content</a>
     {next && (
       <div class="promo-bar">
-        <a href="/gigs">Next gig: {next.city}, {formatDate(next.date, { year: undefined })}</a>
+        <a href="/live">Next gig: {next.city}, {formatDate(next.date, { year: undefined })}</a>
       </div>
     )}
     <header class="site-header">
       <a class="brand" href="/"><Logo class="brand-logo" /></a>
       <nav aria-label="Main">
         {nav.map((item) => (
-          <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+          <a href={item.href} class:list={{ 'nav-cta': item.cta }} aria-current={path === item.href ? 'page' : undefined}>
             {item.label}
           </a>
         ))}

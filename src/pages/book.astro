@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import Testimonials from '../components/Testimonials.astro';
 import { site } from '../config';
 ---
 
-<Base title="Contact" description="Booking enquiries.">
-  <h1>Contact</h1>
+<Base title="Book The Band" description="Booking enquiries for venues, festivals and private events.">
+  <h1>Book The Band</h1>
   <div class="prose">
     <p class="lead">Booking a venue, festival or private party? Get in touch.</p>
     <p>Email <a href={`mailto:${site.bookingEmail}`}>{site.bookingEmail}</a> with:</p>
@@ -14,4 +15,9 @@ import { site } from '../config';
       <li>whether there is a house PA and backline</li>
     </ul>
   </div>
+
+  <section>
+    <h2>What people say <a href="/testimonials">Read more</a></h2>
+    <Testimonials limit={2} />
+  </section>
 </Base>

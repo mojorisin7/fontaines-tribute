@@ -1,0 +1,26 @@
+---
+// Quote cards from src/data/testimonials.json. Pass `limit` to show only the first few.
+import testimonials from '../data/testimonials.json';
+
+interface Props {
+  limit?: number;
+}
+
+interface Testimonial { quote: string; name: string; role?: string }
+const { limit } = Astro.props;
+const list = (testimonials as Testimonial[]).slice(0, limit);
+---
+
+{list.length > 0 && (
+  <div class="testimonials">
+    {list.map((t) => (
+      <figure class="testimonial">
+        <blockquote>{t.quote}</blockquote>
+        <figcaption>
+          <span class="testimonial-name">{t.name}</span>
+          {t.role && <span class="muted">{t.role}</span>}
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+)}

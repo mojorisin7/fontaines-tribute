@@ -17,13 +17,16 @@ npm run build    # outputs to dist/
 | `src/config.ts` | Band name, tagline, booking email, social links, nav tabs, home slider slides. Set these first. |
 | `src/components/HeroSlider.astro` | Home page 4-slide slider |
 | `src/data/gigs.json` | Gig list. Edit this to add gigs (Tier 1). Sample data for now. `status` is `live`, `sold-out` or `cancelled`. |
-| `src/data/photos.json` | Gallery photos (images go in `public/photos/`). Empty shows placeholders. |
+| `src/data/music.json` | Music page: the set, grouped by album (sample for now), plus optional `listen` links to recordings. |
+| `src/data/videos.json` | Videos page: `{ "url": "<any YouTube link>", "title": "..." }` per video. Empty shows placeholders. |
+| `src/data/testimonials.json` | Testimonials page, plus two on Home and Book The Band. Placeholder quotes for now. |
+| `src/data/photos.json` | Photos added with `add-photos`. Not shown anywhere yet: the Gallery page was dropped from the client's page list (restore it from git if they take the gallery extra). |
 | `src/lib/gigs.ts` | Gig type, sorting, upcoming/past split, date formatting. Swap `loadGigs()` for Supabase in Tier 2. |
 | `src/components/GigMap.astro` | Leaflet map, one flag per gig |
 | `src/components/GigList.astro` | Gig rows used on Home and Gigs |
 | `src/layouts/Base.astro` | Header, nav, footer, page shell |
 | `src/styles/global.css` | Colour and font tokens at the top. Swap these for the client's palette. |
-| `src/pages/` | Home, Gigs, Gallery, About, Contact, 404 |
+| `src/pages/` | Home, Live, Music, Videos, Testimonials, Book The Band, 404 |
 | `scripts/` | `add-gig` and `add-photos` helpers (see below) |
 
 ## Adding a gig (Tier 1)
