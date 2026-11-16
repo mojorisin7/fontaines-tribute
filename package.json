@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "add-gig": "node scripts/add-gig.mjs",
-    "add-photos": "node scripts/add-photos.mjs"
+    "add-photos": "node scripts/add-photos.mjs",
+    "import-gigs": "node scripts/import-gigs.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0",

@@ -43,6 +43,28 @@ To cancel or edit a gig, change its entry in `src/data/gigs.json` (set `"status"
 
 Rebuild and deploy after each change. Upcoming vs past is worked out at build time, so rebuild after each gig too.
 
+## Importing gigs from the band's Google Sheet
+
+The band keeps their gigs in a Google Sheet (one row per gig) and you pull it into the site when you choose.
+
+Sheet columns, in a header row: **Date**, **Venue**, **Postcode**, **Status** (all required), **City** (optional, filled in from the
+postcode), **Ticket link**, Status values `On sale` (or blank), `Sold out` or `Cancelled`, **Country** (optional, defaults to
+UK) and **Notes** (ignored). Columns can be in any order. Dates can be typed as `5/12/2026` (day first) or `2026-12-05`.
+Past gigs can stay in the sheet: the site moves them to "Past" by itself.
+
+```bash
+npm run import-gigs -- --dry-run     # show what would change
+npm run import-gigs                  # save it to src/data/gigs.json
+```
+
+This reads the sheet at `GIGS_SHEET_URL` in `.env` (copy `.env.example`). For that, the sheet must be shared as
+"Anyone with the link: Viewer". Without sharing it, download it with File > Download > CSV and pass the file:
+`npm run import-gigs -- ~/Downloads/gigs.csv`. An Excel file saved as CSV works too.
+
+The sheet replaces the whole gig list. Every row is checked first; if any row has a bad date, venue, postcode,
+status or ticket link, nothing is saved and each problem is listed with its row number. Postcodes are looked up
+once and reused. Rebuild and deploy afterwards.
+
 ## Adding photos to the gallery (Tier 1)
 
 ```bash

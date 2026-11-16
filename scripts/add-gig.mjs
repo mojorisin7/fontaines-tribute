@@ -6,6 +6,7 @@
 // --status live|sold-out|cancelled (defaults to live), --dry-run (print, don't save).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
+import { lookupPostcodes, normalisePostcode } from './lib/postcodes.mjs';
 
 const GIGS = new URL('../src/data/gigs.json', import.meta.url);
 const STATUSES = ['live', 'sold-out', 'cancelled'];
@@ -34,24 +35,24 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.date) || Number.isNaN(Date.parse(opts.date)
 if (!STATUSES.includes(opts.status)) fail(`status must be one of ${STATUSES.join(', ')}`);
 if (opts.tickets && !/^https?:\/\//.test(opts.tickets)) fail('tickets must be a full link starting with https://');
 
-const postcode = opts.postcode.toUpperCase().replace(/\s+/g, ' ').trim();
-const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode.replace(/ /g, ''))}`);
-if (res.status === 404) fail(`postcode "${postcode}" not found. Check it and try again.`);
-if (!res.ok) fail(`postcode lookup failed (HTTP ${res.status}). Try again in a minute.`);
-const { result } = await res.json();
-
-// Official district names read oddly on a gig list ("Bristol, City of", "City of Edinburgh").
-const town = (result.admin_district || result.parish || '').replace(/, City of$/, '').replace(/^City of /, '');
+const postcode = normalisePostcode(opts.postcode);
+let place;
+try {
+  place = (await lookupPostcodes([postcode])).get(postcode);
+} catch (e) {
+  fail(e.message);
+}
+if (!place) fail(`postcode "${postcode}" not found. Check it and try again.`);
 
 const gigs = JSON.parse(readFileSync(GIGS, 'utf8'));
 const gig = {
   id: Math.max(0, ...gigs.map((g) => g.id)) + 1,
   date: opts.date,
   venue: opts.venue.trim(),
-  city: (opts.city || town).trim(),
-  postcode: result.postcode,
-  lat: Number(result.latitude.toFixed(4)),
-  lng: Number(result.longitude.toFixed(4)),
+  city: (opts.city || place.town).trim(),
+  postcode: place.postcode,
+  lat: place.lat,
+  lng: place.lng,
   ticketUrl: opts.tickets,
   status: opts.status,
 };
