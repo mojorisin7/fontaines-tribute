@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import GigMap from '../components/GigMap.astro';
+import GigList from '../components/GigList.astro';
+import { loadGigs, upcomingGigs, pastGigs } from '../lib/gigs';
+
+const gigs = loadGigs();
+const upcoming = upcomingGigs(gigs);
+const past = pastGigs(gigs);
+---
+
+<Base title="Gigs" description="Upcoming and past gig dates.">
+  <h1>Gigs</h1>
+
+  <GigMap gigs={upcoming} />
+
+  <h2>Upcoming</h2>
+  <GigList gigs={upcoming} />
+
+  {past.length > 0 && (
+    <>
+      <h2>Past gigs</h2>
+      <GigList gigs={past} past />
+    </>
+  )}
+</Base>

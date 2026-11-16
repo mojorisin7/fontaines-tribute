@@ -1,0 +1,30 @@
+---
+import { formatDate, type Gig } from '../lib/gigs';
+
+interface Props {
+  gigs: Gig[];
+  past?: boolean;
+  empty?: string;
+}
+
+const { gigs, past = false, empty = 'No gigs announced yet.' } = Astro.props;
+---
+
+<ul class="gig-list">
+  {gigs.length === 0 && <li class="gig-empty">{empty}</li>}
+  {gigs.map((g) => (
+    <li class:list={['gig', { past, cancelled: g.status === 'cancelled' }]}>
+      <time class="date" datetime={g.date}>{formatDate(g.date)}</time>
+      <span class="where">{g.venue}</span>
+      <span class="city">{g.city}</span>
+      <span class="action">
+        {!past && g.status === 'cancelled' && <span class="badge">Cancelled</span>}
+        {!past && g.status === 'sold-out' && <span class="badge">Sold out</span>}
+        {!past && g.status === 'live' && g.ticketUrl && (
+          <a class="button primary small" href={g.ticketUrl} rel="noopener" target="_blank">Tickets</a>
+        )}
+        {!past && g.status === 'live' && !g.ticketUrl && <span class="muted">Tickets soon</span>}
+      </span>
+    </li>
+  ))}
+</ul>

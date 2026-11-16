@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 293 58" role="img" aria-label="Fontaines D.C. tribute (placeholder logo)">
+  <rect width="293" height="58" fill="#000000"/>
+  <line x1="6" y1="6" x2="6" y2="52" stroke="#fbfbf7" stroke-width="3.5"/>
+  <path d="M7.5 7 L30 14.5 L7.5 22 Z" fill="#a3ff57"/>
+  <text x="38" y="37" textLength="171" lengthAdjust="spacingAndGlyphs" font-family="'Helvetica Neue', Inter, Arial, sans-serif" font-weight="900" font-size="31" fill="#fbfbf7">FONTAINES</text>
+  <rect x="219" y="11" width="70" height="30" fill="#a3ff57"/>
+  <text x="254" y="33" text-anchor="middle" font-family="'Helvetica Neue', Inter, Arial, sans-serif" font-weight="900" font-size="19" fill="#000000">D.C.</text>
+  <text x="39" y="55" font-family="'Helvetica Neue', Inter, Arial, sans-serif" font-weight="900" font-size="8.5" letter-spacing="4.5" fill="#fbfbf7" opacity="0.6">TRIBUTE</text>
+</svg>

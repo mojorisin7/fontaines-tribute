@@ -1,0 +1,71 @@
+---
+// Wordmark logo drawn as inline SVG: flag mark, main name, suffix in an accent block,
+// small tag line underneath. Text comes from site.logo in src/config.ts.
+// If site.logo.image is set, that image is shown instead.
+// Widths are worked out from the letter count so a new name still lays out.
+import { site } from '../config';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const { image, main, suffix, tag } = site.logo;
+
+const mainX = 38;
+const mainW = main.length * 19;
+const boxX = mainX + mainW + 10;
+const boxW = suffix ? suffix.length * 13 + 18 : 0;
+const width = boxX + boxW + 4;
+---
+
+{image ? (
+  <img class={className} src={image} alt={site.bandName} />
+) : (
+<svg
+  class={className}
+  viewBox={`0 0 ${width} 58`}
+  role="img"
+  aria-label={site.bandName}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <line x1="6" y1="6" x2="6" y2="52" stroke="currentColor" stroke-width="3.5" />
+  <path d="M7.5 7 L30 14.5 L7.5 22 Z" fill="var(--accent, #a3ff57)" />
+  <text
+    x={mainX}
+    y="37"
+    textLength={mainW}
+    lengthAdjust="spacingAndGlyphs"
+    font-family="var(--font-display, 'Helvetica Neue', Arial, sans-serif)"
+    font-weight="900"
+    font-size="31"
+    fill="currentColor"
+  >{main.toUpperCase()}</text>
+  {suffix && (
+    <>
+      <rect x={boxX} y="11" width={boxW} height="30" fill="var(--accent, #a3ff57)" />
+      <text
+        x={boxX + boxW / 2}
+        y="33"
+        text-anchor="middle"
+        font-family="var(--font-display, 'Helvetica Neue', Arial, sans-serif)"
+        font-weight="900"
+        font-size="19"
+        fill="var(--accent-ink, #000)"
+      >{suffix.toUpperCase()}</text>
+    </>
+  )}
+  {tag && (
+    <text
+      x={mainX + 1}
+      y="55"
+      font-family="var(--font-display, 'Helvetica Neue', Arial, sans-serif)"
+      font-weight="900"
+      font-size="8.5"
+      letter-spacing="4.5"
+      fill="currentColor"
+      opacity="0.6"
+    >{tag.toUpperCase()}</text>
+  )}
+</svg>
+)}

@@ -1,0 +1,15 @@
+---
+// Scrolling announcement band. The items are repeated twice so the loop is seamless.
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+const loop = [...items, ...items, ...items, ...items];
+---
+
+<div class="ticker full-bleed" aria-label={items.join(', ')}>
+  <div class="ticker-track" aria-hidden="true">
+    {[...loop, ...loop].map((t) => <span>{t}</span>)}
+  </div>
+</div>

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "date": "2026-11-14",
+    "venue": "Brudenell Social Club",
+    "city": "Leeds",
+    "postcode": "LS6 1JB",
+    "lat": 53.8077,
+    "lng": -1.5651,
+    "ticketUrl": "",
+    "status": "live",
+    "notes": "SAMPLE DATA - replace with real gigs"
+  },
+  {
+    "id": 2,
+    "date": "2026-11-28",
+    "venue": "Night & Day Cafe",
+    "city": "Manchester",
+    "postcode": "M4 1LW",
+    "lat": 53.4836,
+    "lng": -2.2349,
+    "ticketUrl": "",
+    "status": "live",
+    "notes": "SAMPLE DATA - replace with real gigs"
+  },
+  {
+    "id": 3,
+    "date": "2026-12-12",
+    "venue": "The Leadmill",
+    "city": "Sheffield",
+    "postcode": "S1 4BJ",
+    "lat": 53.3770,
+    "lng": -1.4600,
+    "ticketUrl": "",
+    "status": "cancelled",
+    "notes": "SAMPLE DATA - shows how a cancelled gig looks"
+  },
+  {
+    "id": 4,
+    "date": "2026-09-19",
+    "venue": "The Cluny",
+    "city": "Newcastle",
+    "postcode": "NE1 2PQ",
+    "lat": 54.9722,
+    "lng": -1.5997,
+    "ticketUrl": "",
+    "status": "live",
+    "notes": "SAMPLE DATA - a past gig"
+  }
+]

@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import GigList from '../components/GigList.astro';
+import Ticker from '../components/Ticker.astro';
+import HeroSlider from '../components/HeroSlider.astro';
+import { loadGigs, upcomingGigs, nextGig, formatDate } from '../lib/gigs';
+
+const gigs = loadGigs();
+const next = nextGig(gigs);
+const soon = upcomingGigs(gigs).slice(0, 5);
+const tickerItems = soon
+  .filter((g) => g.status !== 'cancelled')
+  .map((g) => `${g.city} ${formatDate(g.date, { year: undefined })}`);
+---
+
+<Base title="Home">
+  <HeroSlider />
+
+  {tickerItems.length > 0 && <Ticker items={tickerItems} />}
+
+  {next && (
+    <section class="next-gig">
+      <div>
+        <p class="eyebrow">Next gig</p>
+        <p class="next-gig-date">{formatDate(next.date, { weekday: 'short', month: 'long' })}</p>
+        <p class="next-gig-venue caps">{next.venue}, {next.city}</p>
+      </div>
+      {next.ticketUrl
+        ? <a class="button primary" href={next.ticketUrl} rel="noopener" target="_blank">Tickets</a>
+        : <a class="button" href="/gigs">Details</a>}
+    </section>
+  )}
+
+  <section>
+    <h2>Live <a href="/gigs">Show all dates</a></h2>
+    <GigList gigs={soon} />
+  </section>
+
+  <section>
+    <h2>Gallery <a href="/gallery">See photos</a></h2>
+    <div class="gallery-grid">
+      {[1, 2, 3].map((n) => <div class="placeholder">PHOTO {n}</div>)}
+    </div>
+  </section>
+</Base>

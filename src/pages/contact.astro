@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../config';
+---
+
+<Base title="Contact" description="Booking enquiries.">
+  <h1>Contact</h1>
+  <div class="prose">
+    <p class="lead">Booking a venue, festival or private party? Get in touch.</p>
+    <p>Email <a href={`mailto:${site.bookingEmail}`}>{site.bookingEmail}</a> with:</p>
+    <ul>
+      <li>the date and venue</li>
+      <li>the set length you need</li>
+      <li>whether there is a house PA and backline</li>
+    </ul>
+  </div>
+</Base>

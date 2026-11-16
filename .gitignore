@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+.env.*
+
+# Client paperwork (quotes, contracts) stays out of the repo
+docs/

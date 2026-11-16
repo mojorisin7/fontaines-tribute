@@ -1,0 +1,72 @@
+---
+// Renders a Leaflet map with one flag per gig.
+// Gigs are passed in as props, so the same component works whether they come
+// from the JSON file (Tier 1) or from Supabase (Tier 2).
+import { formatDate, type Gig } from '../lib/gigs';
+
+interface Props {
+  gigs: Gig[];
+}
+
+const { gigs } = Astro.props;
+const mapped = gigs
+  .filter((g) => g.status !== 'cancelled')
+  .map((g) => ({ venue: g.venue, city: g.city, date: formatDate(g.date), lat: g.lat, lng: g.lng, ticketUrl: g.ticketUrl }));
+---
+
+{mapped.length > 0 && (
+  <div id="gig-map" class="gig-map" role="region" aria-label="Map of upcoming gigs" data-gigs={JSON.stringify(mapped)}></div>
+)}
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  const el = document.getElementById('gig-map');
+  if (el) {
+    const gigs = JSON.parse(el.dataset.gigs || '[]');
+    const map = L.map(el, { scrollWheelZoom: false }).setView([53.8, -1.55], 6);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+
+    const flag = L.divIcon({
+      className: 'flag-pin',
+      html:
+        '<svg width="28" height="34" viewBox="0 0 28 34" xmlns="http://www.w3.org/2000/svg">' +
+        '<line x1="5" y1="2" x2="5" y2="32" stroke="#fbfbf7" stroke-width="2.5"/>' +
+        '<path d="M5 3 L24 9 L5 16 Z" fill="#a3ff57"/></svg>',
+      iconSize: [28, 34],
+      iconAnchor: [5, 32],
+      popupAnchor: [8, -28],
+    });
+
+    // Build popups with DOM nodes, not HTML strings, so Tier 2 user input can't inject markup.
+    const popup = (g: { venue: string; city: string; date: string; ticketUrl: string }) => {
+      const div = document.createElement('div');
+      const name = document.createElement('strong');
+      name.textContent = g.venue;
+      div.append(name, document.createElement('br'), `${g.city}, ${g.date}`);
+      if (g.ticketUrl) {
+        const a = document.createElement('a');
+        a.href = g.ticketUrl;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = 'Tickets';
+        div.append(document.createElement('br'), a);
+      }
+      return div;
+    };
+
+    const bounds: [number, number][] = [];
+    for (const g of gigs) {
+      L.marker([g.lat, g.lng], { icon: flag, title: g.venue }).addTo(map).bindPopup(popup(g));
+      bounds.push([g.lat, g.lng]);
+    }
+
+    if (bounds.length === 1) map.setView(bounds[0], 12);
+    if (bounds.length > 1) map.fitBounds(bounds, { padding: [40, 40] });
+  }
+</script>
