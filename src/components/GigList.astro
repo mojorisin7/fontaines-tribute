@@ -1,5 +1,7 @@
 ---
-import { formatDate, type Gig } from '../lib/gigs';
+// Gig rows: stacked date block (month / day / year), venue over "City, UK", and an outlined
+// blue button for tickets or the gig's status. Used on Home and Live.
+import type { Gig } from '../lib/gigs';
 
 interface Props {
   gigs: Gig[];
@@ -8,23 +10,41 @@ interface Props {
 }
 
 const { gigs, past = false, empty = 'No gigs announced yet.' } = Astro.props;
+
+const parts = (d: string) => {
+  const date = new Date(d + 'T00:00:00');
+  return {
+    month: date.toLocaleDateString('en-GB', { month: 'short' }).slice(0, 3),
+    day: date.getDate(),
+    year: date.getFullYear(),
+  };
+};
 ---
 
 <ul class="gig-list">
   {gigs.length === 0 && <li class="gig-empty">{empty}</li>}
-  {gigs.map((g) => (
-    <li class:list={['gig', { past, cancelled: g.status === 'cancelled' }]}>
-      <time class="date" datetime={g.date}>{formatDate(g.date)}</time>
-      <span class="where">{g.venue}</span>
-      <span class="city">{g.city}</span>
-      <span class="action">
-        {!past && g.status === 'cancelled' && <span class="badge">Cancelled</span>}
-        {!past && g.status === 'sold-out' && <span class="badge">Sold out</span>}
-        {!past && g.status === 'live' && g.ticketUrl && (
-          <a class="button primary small" href={g.ticketUrl} rel="noopener" target="_blank">Tickets</a>
-        )}
-        {!past && g.status === 'live' && !g.ticketUrl && <span class="muted">Tickets soon</span>}
-      </span>
-    </li>
-  ))}
+  {gigs.map((g) => {
+    const p = parts(g.date);
+    return (
+      <li class:list={['gig', { past, cancelled: g.status === 'cancelled' }]}>
+        <time class="gig-date" datetime={g.date}>
+          <span class="gig-month">{p.month}</span>
+          <span class="gig-day">{p.day}</span>
+          <span class="gig-year">{p.year}</span>
+        </time>
+        <span class="gig-where">
+          <span class="gig-venue">{g.venue}</span>
+          <span class="gig-city">{g.city}, {g.country ?? 'UK'}</span>
+        </span>
+        <span class="gig-action">
+          {!past && g.status === 'cancelled' && <span class="gig-button">Cancelled</span>}
+          {!past && g.status === 'sold-out' && <span class="gig-button">Sold out</span>}
+          {!past && g.status === 'live' && g.ticketUrl && (
+            <a class="gig-button" href={g.ticketUrl} rel="noopener" target="_blank">Tickets</a>
+          )}
+          {!past && g.status === 'live' && !g.ticketUrl && <span class="gig-soon">Tickets soon</span>}
+        </span>
+      </li>
+    );
+  })}
 </ul>

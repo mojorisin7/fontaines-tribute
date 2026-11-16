@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import { site, nav } from '../config';
-import { nextGig, formatDate } from '../lib/gigs';
 import Logo from '../components/Logo.astro';
 import SocialIcons from '../components/SocialIcons.astro';
 
@@ -15,7 +14,6 @@ interface Props {
 const { title, description = site.description, overlayHeader = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const year = new Date().getFullYear();
-const next = nextGig();
 ---
 
 <!doctype html>
@@ -24,7 +22,10 @@ const next = nextGig();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- PLACEHOLDER favicons, made from the temp logo's "d.c.". Replace with the tribute band's own. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=Inter:wght@500;700;900&display=swap" rel="stylesheet" />
@@ -32,11 +33,6 @@ const next = nextGig();
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    {next && !overlayHeader && (
-      <div class="promo-bar">
-        <a href="/live">Next gig: {next.city}, {formatDate(next.date, { year: undefined })}</a>
-      </div>
-    )}
     <header class:list={['site-header', { overlay: overlayHeader }]}>
       <button type="button" class="menu-toggle" aria-label="Open menu" aria-controls="menu-drawer" aria-expanded="false">
         <span></span><span></span>
@@ -73,7 +69,7 @@ const next = nextGig();
         Booking: <a href={`mailto:${site.bookingEmail}`}>{site.bookingEmail}</a>
       </p>
       <p class="disclaimer">
-        &copy; {year}. Unofficial tribute site, not affiliated with Fontaines D.C.
+        &copy; {year}. Unofficial tribute site.
       </p>
     </footer>
 
@@ -91,20 +87,18 @@ const next = nextGig();
         drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close(); });
         drawer.addEventListener('close', () => toggle.setAttribute('aria-expanded', 'false'));
       }
-    </script>
 
-    {overlayHeader && (
-      <script>
-        // Swap the see-through header for the solid blue bar once the slider has scrolled away.
-        const header = document.querySelector<HTMLElement>('.site-header.overlay');
-        const hero = document.querySelector<HTMLElement>('.hero-slider');
-        if (header && hero) {
-          const update = () => header.classList.toggle('scrolled', hero.getBoundingClientRect().bottom <= header.offsetHeight);
-          update();
-          window.addEventListener('scroll', update, { passive: true });
-          window.addEventListener('resize', update);
-        }
-      </script>
-    )}
+      // Home page: swap the see-through header for the solid blue bar once the slider has scrolled away.
+      // Kept in this one script, not a conditional second one: Astro matches a component's scripts by
+      // position, so a conditionally rendered script makes other pages load the wrong one.
+      const header = document.querySelector<HTMLElement>('.site-header.overlay');
+      const hero = document.querySelector<HTMLElement>('.hero-slider');
+      if (header && hero) {
+        const update = () => header.classList.toggle('scrolled', hero.getBoundingClientRect().bottom <= header.offsetHeight);
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+      }
+    </script>
   </body>
 </html>

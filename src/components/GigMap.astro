@@ -32,15 +32,18 @@ const mapped = gigs
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
+    // Band-blue flag on a dark pole, with a white edge so it stands out on light and busy map areas.
     const flag = L.divIcon({
       className: 'flag-pin',
       html:
-        '<svg width="28" height="34" viewBox="0 0 28 34" xmlns="http://www.w3.org/2000/svg">' +
-        '<line x1="5" y1="2" x2="5" y2="32" stroke="#fbfbf7" stroke-width="2.5"/>' +
-        '<path d="M5 3 L24 9 L5 16 Z" fill="#a3ff57"/></svg>',
-      iconSize: [28, 34],
-      iconAnchor: [5, 32],
-      popupAnchor: [8, -28],
+        '<svg width="44" height="54" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg">' +
+        '<line x1="7" y1="3" x2="7" y2="51" stroke="#fff" stroke-width="6" stroke-linecap="round"/>' +
+        '<line x1="7" y1="3" x2="7" y2="51" stroke="#111" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M8.5 4.5 L40 14 L8.5 24 Z" fill="#1966cb" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>' +
+        '<circle cx="7" cy="51" r="3" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>',
+      iconSize: [44, 54],
+      iconAnchor: [7, 51],
+      popupAnchor: [14, -46],
     });
 
     // Build popups with DOM nodes, not HTML strings, so Tier 2 user input can't inject markup.

@@ -40,12 +40,15 @@ if (res.status === 404) fail(`postcode "${postcode}" not found. Check it and try
 if (!res.ok) fail(`postcode lookup failed (HTTP ${res.status}). Try again in a minute.`);
 const { result } = await res.json();
 
+// Official district names read oddly on a gig list ("Bristol, City of", "City of Edinburgh").
+const town = (result.admin_district || result.parish || '').replace(/, City of$/, '').replace(/^City of /, '');
+
 const gigs = JSON.parse(readFileSync(GIGS, 'utf8'));
 const gig = {
   id: Math.max(0, ...gigs.map((g) => g.id)) + 1,
   date: opts.date,
   venue: opts.venue.trim(),
-  city: (opts.city || result.admin_district || result.parish || '').trim(),
+  city: (opts.city || town).trim(),
   postcode: result.postcode,
   lat: Number(result.latitude.toFixed(4)),
   lng: Number(result.longitude.toFixed(4)),

@@ -35,7 +35,7 @@ export const nav = [
 // the layout locally. Replace with the band's own photos before the site goes live.
 export const slides = [
   {
-    image: '/photos/hero/slide-1.jpg',
+    image: '/photos/hero/slide-1-no-text.jpg',
     position: 'center',
     eyebrow: 'next-gig',
     title: site.bandName,
@@ -45,14 +45,14 @@ export const slides = [
     ],
   },
   {
-    image: '/photos/hero/slide-2.jpg',
+    image: '/photos/hero/slide-2-no-text.jpg',
     position: '35% center',
     eyebrow: 'On tour',
     title: 'Live dates',
     actions: [{ label: 'See all dates', href: '/live', primary: true }],
   },
   {
-    image: '/photos/hero/slide-3.jpg',
+    image: '/photos/hero/slide-3-no-text.jpg',
     position: '30% center',
     eyebrow: 'Music',
     title: 'The set',

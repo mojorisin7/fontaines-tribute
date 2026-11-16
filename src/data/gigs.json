@@ -1,5 +1,17 @@
 [
   {
+    "id": 4,
+    "date": "2026-09-19",
+    "venue": "The Cluny",
+    "city": "Newcastle",
+    "postcode": "NE1 2PQ",
+    "lat": 54.9722,
+    "lng": -1.5997,
+    "ticketUrl": "",
+    "status": "live",
+    "notes": "SAMPLE DATA - a past gig"
+  },
+  {
     "id": 1,
     "date": "2026-11-14",
     "venue": "Brudenell Social Club",
@@ -24,27 +36,81 @@
     "notes": "SAMPLE DATA - replace with real gigs"
   },
   {
+    "id": 5,
+    "date": "2026-12-05",
+    "venue": "The Cavern Club",
+    "city": "Liverpool",
+    "postcode": "L2 6RE",
+    "lat": 53.4063,
+    "lng": -2.9876,
+    "ticketUrl": "https://example.com/tickets",
+    "status": "live"
+  },
+  {
     "id": 3,
     "date": "2026-12-12",
     "venue": "The Leadmill",
     "city": "Sheffield",
     "postcode": "S1 4BJ",
-    "lat": 53.3770,
-    "lng": -1.4600,
+    "lat": 53.377,
+    "lng": -1.46,
     "ticketUrl": "",
     "status": "cancelled",
     "notes": "SAMPLE DATA - shows how a cancelled gig looks"
   },
   {
-    "id": 4,
-    "date": "2026-09-19",
-    "venue": "The Cluny",
-    "city": "Newcastle",
-    "postcode": "NE1 2PQ",
-    "lat": 54.9722,
-    "lng": -1.5997,
+    "id": 6,
+    "date": "2026-12-19",
+    "venue": "The Fleece",
+    "city": "Bristol",
+    "postcode": "BS1 6JJ",
+    "lat": 51.4522,
+    "lng": -2.5895,
+    "ticketUrl": "https://example.com/tickets",
+    "status": "live"
+  },
+  {
+    "id": 7,
+    "date": "2027-01-16",
+    "venue": "King Tut's Wah Wah Hut",
+    "city": "Glasgow",
+    "postcode": "G2 5RL",
+    "lat": 55.8627,
+    "lng": -4.2651,
     "ticketUrl": "",
-    "status": "live",
-    "notes": "SAMPLE DATA - a past gig"
+    "status": "sold-out"
+  },
+  {
+    "id": 8,
+    "date": "2027-01-30",
+    "venue": "Rock City",
+    "city": "Nottingham",
+    "postcode": "NG1 5GG",
+    "lat": 52.9561,
+    "lng": -1.1549,
+    "ticketUrl": "https://example.com/tickets",
+    "status": "live"
+  },
+  {
+    "id": 9,
+    "date": "2027-02-13",
+    "venue": "The Lexington",
+    "city": "London",
+    "postcode": "N1 9JB",
+    "lat": 51.5317,
+    "lng": -0.1119,
+    "ticketUrl": "https://example.com/tickets",
+    "status": "live"
+  },
+  {
+    "id": 10,
+    "date": "2027-03-06",
+    "venue": "Brudenell Social Club",
+    "city": "Leeds",
+    "postcode": "LS6 1JB",
+    "lat": 53.8117,
+    "lng": -1.5699,
+    "ticketUrl": "",
+    "status": "live"
   }
 ]

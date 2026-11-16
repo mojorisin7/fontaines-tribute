@@ -40,8 +40,8 @@ img { max-width: 100%; display: block; }
 .muted { color: var(--muted); }
 
 /* Shared all-caps display treatment */
-.caps, h1, h2, .brand, .site-header nav a, .button, .eyebrow, .badge,
-.gig .date, .gig .where, .ticker, .promo-bar {
+.caps, h1, h2, .brand, .site-header nav a, .button, .eyebrow,
+.gig-date, .gig-where, .gig-button, .gig-soon, .ticker {
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
   font-weight: var(--display-weight);
@@ -58,18 +58,6 @@ img { max-width: 100%; display: block; }
   z-index: 1000;
 }
 .skip-link:focus { left: 0.5rem; }
-
-/* Top strip */
-.promo-bar {
-  background: var(--bg);
-  color: var(--fg);
-  text-align: center;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  padding: 0.5rem 1rem;
-}
-.promo-bar a { text-decoration: none; }
-.promo-bar a:hover { color: var(--accent); }
 
 /* Header: blue bar, black type. On the home page (.overlay) it starts see-through over the
    slider with white type, and turns into the blue bar once the slider scrolls away (.scrolled). */
@@ -259,7 +247,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   transition: opacity 0.9s ease, visibility 0s linear 0.9s;
 }
 .slide.active { opacity: 1; visibility: visible; transition: opacity 0.9s ease; }
-.slide img {
+.slide > img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -268,7 +256,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   transform: scale(1.04);
   transition: transform 7s ease-out;
 }
-.slide.active img { transform: scale(1); }
+.slide.active > img { transform: scale(1); }
 .slide::after {
   content: '';
   position: absolute;
@@ -364,7 +352,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide, .slide.active, .slide img { transition: none; transform: none; }
+  .slide, .slide.active, .slide > img { transition: none; transform: none; }
 }
 
 /* Ticker */
@@ -403,35 +391,46 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 }
 .next-gig-venue { font-size: 1.1rem; margin: 0; }
 
-/* Gigs */
+/* Gigs: blue rows with a stacked date block, like the reference tour list */
 .gig-list { list-style: none; padding: 0; margin: 0; }
 
 .gig {
   display: grid;
-  grid-template-columns: 10rem 1fr 1fr auto;
-  gap: 1rem;
+  grid-template-columns: 5rem 1fr auto;
+  gap: 1.5rem;
   align-items: center;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 1.1rem 1rem;
+  border-bottom: 1px solid #333;
+  color: var(--band);
+  transition: background 0.15s;
 }
+.gig:hover { background: #1b1b1b; }
 
-.gig .date { color: var(--accent); letter-spacing: 0.15em; font-size: 0.85rem; }
-.gig .where { letter-spacing: 0.1em; font-size: 0.95rem; }
-.gig .city { color: var(--muted); letter-spacing: 0.15em; font-size: 0.8rem; text-transform: uppercase; }
-.gig .action { justify-self: end; font-size: 0.75rem; }
-.gig .action .muted { letter-spacing: 0.15em; text-transform: uppercase; font-size: 0.65rem; }
-.gig.cancelled .date, .gig.cancelled .where, .gig.cancelled .city { opacity: 0.45; text-decoration: line-through; }
-.gig.past { opacity: 0.55; }
-.gig.past .date { color: var(--muted); }
+.gig-date { display: flex; flex-direction: column; align-items: center; line-height: 0.95; }
+.gig-month { font-size: 1.1rem; }
+.gig-day { font-size: 2.6rem; line-height: 0.9; }
+.gig-year { font-size: 1.05rem; font-weight: 700; }
+.gig-where { display: flex; flex-direction: column; font-size: 1.45rem; line-height: 1.05; }
+
+.gig-action { justify-self: end; }
+.gig-button {
+  display: inline-block;
+  min-width: 9rem;
+  padding: 0.45rem 1.25rem;
+  border: 2px solid var(--band);
+  color: var(--band);
+  font-size: 1.45rem;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+}
+a.gig-button:hover { background: var(--band); color: #000; }
+.gig-soon { font-size: 1.1rem; opacity: 0.7; }
+
+.gig.cancelled .gig-date, .gig.cancelled .gig-where { opacity: 0.45; text-decoration: line-through; }
+.gig.cancelled .gig-button { border-color: var(--muted); color: var(--muted); }
+.gig.past { opacity: 0.5; }
 .gig-empty { padding: 1.1rem 0; color: var(--muted); }
-
-.badge {
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  border: 2px solid var(--muted);
-  color: var(--muted);
-  padding: 0.35rem 0.7rem;
-}
 
 .gig-map { height: 460px; width: 100%; margin: 0 0 2rem; border: 1px solid var(--line); background: #111; }
 .gig-map .leaflet-popup-content { font-family: var(--font-body); }
@@ -535,9 +534,10 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 .disclaimer { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
 @media (max-width: 760px) {
-  .gig { grid-template-columns: 1fr auto; gap: 0.25rem 1rem; }
-  .gig .date { grid-column: 1 / -1; }
-  .gig .city { grid-column: 1; }
-  .gig .action { grid-column: 2; grid-row: 2 / span 2; }
+  .gig { grid-template-columns: 3.75rem 1fr; gap: 0.6rem 1rem; padding: 1rem 0.5rem; }
+  .gig-day { font-size: 2.1rem; }
+  .gig-where { font-size: 1.2rem; }
+  .gig-action { grid-column: 2; justify-self: start; }
+  .gig-button { font-size: 1.15rem; min-width: 7.5rem; padding: 0.35rem 1rem; }
   .next-gig { grid-template-columns: 1fr; }
 }

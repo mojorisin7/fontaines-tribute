@@ -63,5 +63,19 @@ Edit `alt` in `photos.json` if you want a more specific description for screen r
 
 ## Notes
 
-- Layout and feel follow the Fontaines D.C. site
+- Layout and feel follow the Fontaines D.C. site, but the band uses its own name, logo, photos and wording. Do not copy their images, text or code.
 - All gig data in the repo is sample data. Replace before launch.
+
+## Placeholders: do not launch with these
+
+These are Fontaines D.C.'s own artwork and branding, used only to preview the layout locally.
+Together they make the site look like the official band site, so all of them must be replaced
+with the tribute band's own material before the site goes live.
+
+- **Slider images:** `public/photos/hero/slide-1.jpg` to `slide-4.jpg`, and the `slide-1-no-text.jpg`
+  to `slide-3-no-text.jpg` copies with the words painted out. Set in `slides` in `src/config.ts`.
+- **Header logo:** `public/logo/temp-logo.png` (`logo.image` in `src/config.ts`).
+- **Favicons:** `public/favicon-32.png`, `favicon-192.png` and `apple-touch-icon.png`, made from the temp logo.
+- **Band name:** `bandName` in `src/config.ts` is "Fontaines D.C." for now.
+- **Content:** the sample setlist (`src/data/music.json`), placeholder testimonials, sample gigs,
+  social links and the booking email.
