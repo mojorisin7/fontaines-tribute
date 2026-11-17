@@ -59,6 +59,24 @@ img { max-width: 100%; display: block; }
 }
 .skip-link:focus { left: 0.5rem; }
 
+/* Preview builds only: fixed strip at the bottom so it never clashes with the header or slider. */
+.preview-strip {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  padding: 0.35rem 1rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+  background: #ffd400;
+  color: #000;
+  text-align: center;
+  font-family: var(--font-display); font-stretch: var(--display-stretch);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
 /* Header: blue bar, black type. On the home page (.overlay) it starts see-through over the
    slider with white type, and turns into the blue bar once the slider scrolls away (.scrolled). */
 .site-header {

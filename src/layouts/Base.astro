@@ -14,6 +14,8 @@ interface Props {
 const { title, description = site.description, overlayHeader = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const year = new Date().getFullYear();
+// Set by `npm run preview:deploy`: adds the preview strip and keeps search engines out.
+const isPreview = import.meta.env.PUBLIC_PREVIEW === 'true';
 ---
 
 <!doctype html>
@@ -22,6 +24,7 @@ const year = new Date().getFullYear();
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
     <!-- PLACEHOLDER favicons, made from the temp logo's "d.c.". Replace with the tribute band's own. -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
@@ -33,6 +36,7 @@ const year = new Date().getFullYear();
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    {isPreview && <div class="preview-strip" role="note">Preview, not the live site</div>}
     <header class:list={['site-header', { overlay: overlayHeader }]}>
       <button type="button" class="menu-toggle" aria-label="Open menu" aria-controls="menu-drawer" aria-expanded="false">
         <span></span><span></span>
