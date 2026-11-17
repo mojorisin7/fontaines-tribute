@@ -16,7 +16,7 @@ npm run build    # outputs to dist/
 npm run preview:deploy
 ```
 
-Builds the site as a preview (yellow "Preview, not the live site" strip, kept out of search engines) and uploads it
+Builds the site as a preview (kept out of search engines) and uploads it
 to the `fontaines-tribute` Cloudflare Pages project on the `preview` branch:
 **https://preview.fontaines-tribute.pages.dev**. The project's Access policy puts an email login in front of it;
 add or remove people in Cloudflare Zero Trust > Access > Applications. Needs `npx wrangler login` once.

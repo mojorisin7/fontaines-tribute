@@ -2,10 +2,10 @@
 //
 //   npm run preview:deploy
 //
-// Preview builds show a "Preview, not the live site" strip and tell search engines to stay away
-// (robots meta tag, X-Robots-Tag header and robots.txt). Uploads go to the "preview" branch of the
-// Cloudflare Pages project, so they land on the preview address, which the project's Access policy
-// keeps behind an email login. Needs `npx wrangler login` once.
+// Preview builds tell search engines to stay away (robots meta tag, X-Robots-Tag header and
+// robots.txt). Uploads go to the "preview" branch of the Cloudflare Pages project, so they land on
+// the preview address, which the project's Access policy keeps behind an email login.
+// Needs `npx wrangler login` once.
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 

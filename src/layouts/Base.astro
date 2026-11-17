@@ -14,7 +14,7 @@ interface Props {
 const { title, description = site.description, overlayHeader = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const year = new Date().getFullYear();
-// Set by `npm run preview:deploy`: adds the preview strip and keeps search engines out.
+// Set by `npm run preview:deploy`: keeps search engines out of the preview.
 const isPreview = import.meta.env.PUBLIC_PREVIEW === 'true';
 ---
 
@@ -36,7 +36,6 @@ const isPreview = import.meta.env.PUBLIC_PREVIEW === 'true';
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    {isPreview && <div class="preview-strip" role="note">Preview, not the live site</div>}
     <header class:list={['site-header', { overlay: overlayHeader }]}>
       <button type="button" class="menu-toggle" aria-label="Open menu" aria-controls="menu-drawer" aria-expanded="false">
         <span></span><span></span>
