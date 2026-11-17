@@ -3,11 +3,14 @@
 // Autoplays every few seconds, pauses on hover or keyboard focus, and stays put
 // for visitors who have reduced motion switched on.
 import { slides } from '../config';
-import { nextGig, formatDate } from '../lib/gigs';
+import { loadGigs, nextGig, formatDate } from '../lib/gigs';
 import Logo from './Logo.astro';
 
-const next = nextGig();
-const nextStop = next ? `Next stop: ${next.city}, ${formatDate(next.date, { year: undefined })}` : null;
+// One "Next stop" per possible gig; the build shows the next for the build date and the browser
+// re-picks it for the visitor's date (src/lib/gig-dates.ts).
+const gigs = loadGigs();
+const candidates = gigs.filter((g) => g.status !== 'cancelled');
+const next = nextGig(gigs);
 ---
 
 <section class="hero-slider full-bleed" aria-roledescription="carousel" aria-label="Highlights" data-interval="6000">
@@ -28,10 +31,12 @@ const nextStop = next ? `Next stop: ${next.city}, ${formatDate(next.date, { year
       />
       <div class="slide-inner">
         {s.eyebrow === 'next-gig' ? (
-          nextStop && (
-            <p class="slide-eyebrow">
+          candidates.length > 0 && (
+            <p class="slide-eyebrow" data-next-group hidden={!next}>
               <svg class="pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor" /></svg>
-              {nextStop}
+              {candidates.map((g) => (
+                <span data-date={g.date} hidden={g !== next}>Next stop: {g.city}, {formatDate(g.date, { year: undefined })}</span>
+              ))}
             </p>
           )
         ) : (

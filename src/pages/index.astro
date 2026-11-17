@@ -4,37 +4,40 @@ import GigList from '../components/GigList.astro';
 import Ticker from '../components/Ticker.astro';
 import HeroSlider from '../components/HeroSlider.astro';
 import Testimonials from '../components/Testimonials.astro';
-import { loadGigs, upcomingGigs, nextGig, formatDate } from '../lib/gigs';
+import { loadGigs, nextGig, formatDate } from '../lib/gigs';
 
 const gigs = loadGigs();
+// Every gig that could be "next"; the build shows the next one for the build date and the
+// browser re-picks it for the visitor's date (src/lib/gig-dates.ts).
+const candidates = gigs.filter((g) => g.status !== 'cancelled');
 const next = nextGig(gigs);
-const soon = upcomingGigs(gigs).slice(0, 5);
-const tickerItems = soon
-  .filter((g) => g.status !== 'cancelled')
-  .map((g) => `${g.city} ${formatDate(g.date, { year: undefined })}`);
 ---
 
 <Base title="Home" overlayHeader>
   <HeroSlider />
 
-  {tickerItems.length > 0 && <Ticker items={tickerItems} />}
+  <Ticker gigs={gigs} />
 
-  {next && (
-    <section class="next-gig">
-      <div>
-        <p class="eyebrow">Next gig</p>
-        <p class="next-gig-date">{formatDate(next.date, { weekday: 'short', month: 'long' })}</p>
-        <p class="next-gig-venue caps">{next.venue}, {next.city}</p>
-      </div>
-      {next.ticketUrl
-        ? <a class="button primary" href={next.ticketUrl} rel="noopener" target="_blank">Tickets</a>
-        : <a class="button" href="/live">Details</a>}
-    </section>
+  {candidates.length > 0 && (
+    <div data-next-group hidden={!next}>
+      {candidates.map((g) => (
+        <section class="next-gig" data-date={g.date} hidden={g !== next}>
+          <div>
+            <p class="eyebrow">Next gig</p>
+            <p class="next-gig-date">{formatDate(g.date, { weekday: 'short', month: 'long' })}</p>
+            <p class="next-gig-venue caps">{g.venue}, {g.city}</p>
+          </div>
+          {g.ticketUrl
+            ? <a class="button primary" href={g.ticketUrl} rel="noopener" target="_blank">Tickets</a>
+            : <a class="button" href="/live">Details</a>}
+        </section>
+      ))}
+    </div>
   )}
 
   <section>
     <h2>Live <a href="/live">Show all dates</a></h2>
-    <GigList gigs={soon} />
+    <GigList gigs={gigs} limit={5} />
   </section>
 
   <section>

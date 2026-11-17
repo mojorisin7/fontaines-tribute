@@ -20,8 +20,11 @@ export function loadGigs(): Gig[] {
   return [...(data as Gig[])].sort((a, b) => a.date.localeCompare(b.date));
 }
 
-// Static build: "today" is the build date, so rebuild after each gig to move it to Past.
-const today = () => new Date().toISOString().slice(0, 10);
+// "Today" at build time. Pages are built with the gigs correct for this date, and
+// src/lib/gig-dates.ts re-applies the same rules in the visitor's browser with their date,
+// so past gigs move out and the next gig updates without a rebuild.
+// GIGS_TODAY=YYYY-MM-DD fakes the build date, for checking how an older build behaves.
+export const today = () => process.env.GIGS_TODAY || new Date().toISOString().slice(0, 10);
 
 export const upcomingGigs = (gigs = loadGigs()) => gigs.filter((g) => g.date >= today());
 export const pastGigs = (gigs = loadGigs()) => gigs.filter((g) => g.date < today()).reverse();

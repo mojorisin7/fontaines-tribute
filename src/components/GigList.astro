@@ -1,15 +1,28 @@
 ---
 // Gig rows: stacked date block (month / day / year), venue over "City, UK", and an outlined
 // blue button for tickets or the gig's status. Used on Home and Live.
-import type { Gig } from '../lib/gigs';
+// Pass every gig: the list shows the upcoming (or past) ones for the build date, and
+// src/lib/gig-dates.ts re-checks them against the visitor's date in the browser.
+import { today, type Gig } from '../lib/gigs';
 
 interface Props {
   gigs: Gig[];
   past?: boolean;
+  limit?: number;
   empty?: string;
 }
 
-const { gigs, past = false, empty = 'No gigs announced yet.' } = Astro.props;
+const { gigs, past = false, limit, empty = 'No gigs announced yet.' } = Astro.props;
+const buildDay = today();
+const ordered = past ? [...gigs].sort((a, b) => b.date.localeCompare(a.date)) : [...gigs].sort((a, b) => a.date.localeCompare(b.date));
+
+// Which rows start visible, as of the build date.
+let shown = 0;
+const rows = ordered.map((g) => {
+  const visible = (g.date >= buildDay) !== past && shown < (limit ?? Infinity);
+  if (visible) shown++;
+  return { g, visible };
+});
 
 const parts = (d: string) => {
   const date = new Date(d + 'T00:00:00');
@@ -21,12 +34,12 @@ const parts = (d: string) => {
 };
 ---
 
-<ul class="gig-list">
-  {gigs.length === 0 && <li class="gig-empty">{empty}</li>}
-  {gigs.map((g) => {
+<ul class="gig-list" data-gig-list={past ? 'past' : 'upcoming'} data-limit={limit}>
+  {!past && <li class="gig-empty" hidden={shown > 0}>{empty}</li>}
+  {rows.map(({ g, visible }) => {
     const p = parts(g.date);
     return (
-      <li class:list={['gig', { past, cancelled: g.status === 'cancelled' }]}>
+      <li class:list={['gig', { past, cancelled: g.status === 'cancelled' }]} data-date={g.date} hidden={!visible}>
         <time class="gig-date" datetime={g.date}>
           <span class="gig-month">{p.month}</span>
           <span class="gig-day">{p.day}</span>

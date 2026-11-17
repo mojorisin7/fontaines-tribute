@@ -2,25 +2,23 @@
 import Base from '../layouts/Base.astro';
 import GigMap from '../components/GigMap.astro';
 import GigList from '../components/GigList.astro';
-import { loadGigs, upcomingGigs, pastGigs } from '../lib/gigs';
+import { loadGigs, pastGigs } from '../lib/gigs';
 
+// Lists and map get every gig and pick upcoming/past by date (build date, then the visitor's).
 const gigs = loadGigs();
-const upcoming = upcomingGigs(gigs);
-const past = pastGigs(gigs);
+const pastAtBuild = pastGigs(gigs);
 ---
 
 <Base title="Live" description="Upcoming and past gig dates.">
   <h1>Live</h1>
 
-  <GigMap gigs={upcoming} />
+  <GigMap gigs={gigs} />
 
   <h2>Upcoming</h2>
-  <GigList gigs={upcoming} />
+  <GigList gigs={gigs} />
 
-  {past.length > 0 && (
-    <>
-      <h2>Past gigs</h2>
-      <GigList gigs={past} past />
-    </>
-  )}
+  <div data-gig-section hidden={pastAtBuild.length === 0}>
+    <h2>Past gigs</h2>
+    <GigList gigs={gigs} past />
+  </div>
 </Base>

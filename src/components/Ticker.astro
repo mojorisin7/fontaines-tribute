@@ -1,15 +1,32 @@
 ---
-// Scrolling announcement band. The items are repeated twice so the loop is seamless.
+// Scrolling band of upcoming dates. The list is repeated so the loop is seamless; each copy holds
+// every gig, and only the next `limit` (as of the build date, then the visitor's date via
+// src/lib/gig-dates.ts) are shown.
+import { today, formatDate, type Gig } from '../lib/gigs';
+
 interface Props {
-  items: string[];
+  gigs: Gig[];
+  limit?: number;
 }
 
-const { items } = Astro.props;
-const loop = [...items, ...items, ...items, ...items];
+const { gigs, limit = 5 } = Astro.props;
+const buildDay = today();
+const items = gigs.filter((g) => g.status !== 'cancelled').map((g) => ({ date: g.date, label: `${g.city} ${formatDate(g.date, { year: undefined })}` }));
+const upcomingLabels = items.filter((i) => i.date >= buildDay).slice(0, limit).map((i) => i.label);
+const COPIES = 8;
 ---
 
-<div class="ticker full-bleed" aria-label={items.join(', ')}>
-  <div class="ticker-track" aria-hidden="true">
-    {[...loop, ...loop].map((t) => <span>{t}</span>)}
+{items.length > 0 && (
+  <div class="ticker full-bleed" data-limit={limit} hidden={upcomingLabels.length === 0} aria-label={`Upcoming: ${upcomingLabels.join(', ')}`}>
+    <div class="ticker-track" aria-hidden="true">
+      {Array.from({ length: COPIES }, (_, copy) => {
+        let shown = 0;
+        return items.map((i) => {
+          const visible = i.date >= buildDay && shown < limit;
+          if (visible) shown++;
+          return <span data-date={i.date} data-copy={copy} hidden={!visible}>{i.label}</span>;
+        });
+      })}
+    </div>
   </div>
-</div>
+)}

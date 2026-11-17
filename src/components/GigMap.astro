@@ -2,6 +2,7 @@
 // Renders a Leaflet map with one flag per gig.
 // Gigs are passed in as props, so the same component works whether they come
 // from the JSON file (Tier 1) or from Supabase (Tier 2).
+// Pass every gig: the browser keeps the ones dated today or later (visitor's date).
 import { formatDate, type Gig } from '../lib/gigs';
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 const { gigs } = Astro.props;
 const mapped = gigs
   .filter((g) => g.status !== 'cancelled')
-  .map((g) => ({ venue: g.venue, city: g.city, date: formatDate(g.date), lat: g.lat, lng: g.lng, ticketUrl: g.ticketUrl }));
+  .map((g) => ({ iso: g.date, venue: g.venue, city: g.city, date: formatDate(g.date), lat: g.lat, lng: g.lng, ticketUrl: g.ticketUrl }));
 ---
 
 {mapped.length > 0 && (
@@ -21,10 +22,12 @@ const mapped = gigs
 <script>
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
+  import { today } from '../lib/gig-dates';
 
   const el = document.getElementById('gig-map');
   if (el) {
-    const gigs = JSON.parse(el.dataset.gigs || '[]');
+    const gigs = JSON.parse(el.dataset.gigs || '[]').filter((g: { iso: string }) => g.iso >= today);
+    if (gigs.length === 0) el.hidden = true;
     const map = L.map(el, { scrollWheelZoom: false }).setView([53.8, -1.55], 6);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

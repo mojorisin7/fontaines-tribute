@@ -77,6 +77,9 @@ const isPreview = import.meta.env.PUBLIC_PREVIEW === 'true';
     </footer>
 
     <script>
+      // Upcoming/past gigs and "next gig" bits, re-checked against the visitor's date.
+      import '../lib/gig-dates';
+
       // Mobile menu: a modal <dialog>, so Escape, focus and screen readers behave without extra code.
       const drawer = document.querySelector<HTMLDialogElement>('#menu-drawer');
       const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
