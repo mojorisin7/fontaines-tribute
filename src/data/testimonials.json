@@ -1,17 +1,1 @@
-[
-  {
-    "quote": "PLACEHOLDER: a quote from a venue or promoter about the band's show goes here.",
-    "name": "Name",
-    "role": "Venue, City"
-  },
-  {
-    "quote": "PLACEHOLDER: a quote from a fan, a wedding or a private party booking goes here.",
-    "name": "Name",
-    "role": "Private event"
-  },
-  {
-    "quote": "PLACEHOLDER: a quote from a festival or another act goes here.",
-    "name": "Name",
-    "role": "Festival"
-  }
-]
+[]

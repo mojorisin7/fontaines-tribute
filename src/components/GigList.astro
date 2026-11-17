@@ -1,6 +1,7 @@
 ---
-// Gig rows: stacked date block (month / day / year), venue over "City, UK", and an outlined
-// blue button for tickets or the gig's status. Used on Home and Live.
+// Gig rows: stacked date block, venue, city and an outlined button for tickets or the gig's status.
+// `band` is the home page's blue Live section (reference tour list): "NOV.", "City, United Kingdom"
+// in its own column and a link icon. Without it (Live page): "Nov" and "City, UK" under the venue.
 // Pass every gig: the list shows the upcoming (or past) ones for the build date, and
 // src/lib/gig-dates.ts re-checks them against the visitor's date in the browser.
 import { today, type Gig } from '../lib/gigs';
@@ -9,10 +10,12 @@ interface Props {
   gigs: Gig[];
   past?: boolean;
   limit?: number;
+  band?: boolean;
   empty?: string;
 }
 
-const { gigs, past = false, limit, empty = 'No gigs announced yet.' } = Astro.props;
+const { gigs, past = false, limit, band = false, empty = 'No gigs announced yet.' } = Astro.props;
+const defaultCountry = band ? 'United Kingdom' : 'UK';
 const buildDay = today();
 const ordered = past ? [...gigs].sort((a, b) => b.date.localeCompare(a.date)) : [...gigs].sort((a, b) => a.date.localeCompare(b.date));
 
@@ -27,14 +30,14 @@ const rows = ordered.map((g) => {
 const parts = (d: string) => {
   const date = new Date(d + 'T00:00:00');
   return {
-    month: date.toLocaleDateString('en-GB', { month: 'short' }).slice(0, 3),
+    month: date.toLocaleDateString('en-GB', { month: 'short' }).slice(0, 3) + (band ? '.' : ''),
     day: date.getDate(),
     year: date.getFullYear(),
   };
 };
 ---
 
-<ul class="gig-list" data-gig-list={past ? 'past' : 'upcoming'} data-limit={limit}>
+<ul class:list={['gig-list', { 'gig-list-band': band }]} data-gig-list={past ? 'past' : 'upcoming'} data-limit={limit}>
   {!past && <li class="gig-empty" hidden={shown > 0}>{empty}</li>}
   {rows.map(({ g, visible }) => {
     const p = parts(g.date);
@@ -45,10 +48,15 @@ const parts = (d: string) => {
           <span class="gig-day">{p.day}</span>
           <span class="gig-year">{p.year}</span>
         </time>
-        <span class="gig-where">
-          <span class="gig-venue">{g.venue}</span>
-          <span class="gig-city">{g.city}, {g.country ?? 'UK'}</span>
-        </span>
+        <span class="gig-venue">{g.venue}</span>
+        <span class="gig-city">{g.city}, {g.country ?? defaultCountry}</span>
+        {band && <span class="gig-link">
+          {!past && g.ticketUrl && (
+            <a href={g.ticketUrl} rel="noopener" target="_blank" aria-label={`${g.venue} tickets (opens in a new tab)`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </a>
+          )}
+        </span>}
         <span class="gig-action">
           {!past && g.status === 'cancelled' && <span class="gig-button">Cancelled</span>}
           {!past && g.status === 'sold-out' && <span class="gig-button">Sold out</span>}

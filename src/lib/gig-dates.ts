@@ -8,7 +8,6 @@
 //                                      enclosing [data-gig-section] is hidden instead if present
 //   [data-next-group]                  shows only its first [data-date] child that is today or later
 //                                      (and hides itself if there is none)
-//   .ticker[data-limit]                spans with data-date and data-copy: next N per copy
 
 const now = new Date();
 const today = [now.getFullYear(), now.getMonth() + 1, now.getDate()].map((n) => String(n).padStart(2, '0')).join('-');
@@ -34,20 +33,6 @@ for (const group of document.querySelectorAll<HTMLElement>('[data-next-group]'))
   const next = items.find(upcoming);
   items.forEach((el) => (el.hidden = el !== next));
   group.hidden = !next;
-}
-
-for (const ticker of document.querySelectorAll<HTMLElement>('.ticker[data-limit]')) {
-  const limit = Number(ticker.dataset.limit) || Infinity;
-  const perCopy = new Map<string, number>();
-  let any = false;
-  for (const span of ticker.querySelectorAll<HTMLElement>('span[data-date]')) {
-    const copy = span.dataset.copy ?? '0';
-    const count = perCopy.get(copy) ?? 0;
-    const show = upcoming(span) && count < limit;
-    span.hidden = !show;
-    if (show) { perCopy.set(copy, count + 1); any = true; }
-  }
-  ticker.hidden = !any;
 }
 
 export { today };

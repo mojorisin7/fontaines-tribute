@@ -1,0 +1,15 @@
+---
+// Dashed "Awaiting content" box marking where the band's own content will go.
+// Pages show these only while the matching data file is empty.
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={['awaiting', className]}>
+  <span class="awaiting-tag">Awaiting content</span>
+  <p>{label}</p>
+</div>

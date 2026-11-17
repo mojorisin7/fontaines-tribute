@@ -1,10 +1,4 @@
 {
-  "note": "SAMPLE setlist so the page has something to show. Replace with the band's real set, and add links to any recordings under listen.",
   "listen": [],
-  "setlist": [
-    { "album": "Dogrel", "year": 2019, "songs": ["Big", "Boys in the Better Land", "Too Real", "Sha Sha Sha"] },
-    { "album": "A Hero's Death", "year": 2020, "songs": ["A Hero's Death", "I Don't Belong", "Televised Mind"] },
-    { "album": "Skinty Fia", "year": 2022, "songs": ["Jackie Down the Line", "I Love You", "Roman Holiday", "Big Shot"] },
-    { "album": "Romance", "year": 2024, "songs": ["Starburster", "Here's the Thing", "Favourite", "In the Modern World"] }
-  ]
+  "setlist": []
 }

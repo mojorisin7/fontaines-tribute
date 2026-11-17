@@ -1,5 +1,7 @@
 ---
-// Quote cards from src/data/testimonials.json. Pass `limit` to show only the first few.
+// Quote cards from src/data/testimonials.json: { "quote": "...", "name": "...", "role": "Venue, City" }.
+// Pass `limit` to show only the first few. While the file is empty, shows "Awaiting content" markers.
+import Awaiting from './Awaiting.astro';
 import testimonials from '../data/testimonials.json';
 
 interface Props {
@@ -9,18 +11,19 @@ interface Props {
 interface Testimonial { quote: string; name: string; role?: string }
 const { limit } = Astro.props;
 const list = (testimonials as Testimonial[]).slice(0, limit);
+const placeholders = Array.from({ length: limit ?? 3 }, (_, i) => i);
 ---
 
-{list.length > 0 && (
-  <div class="testimonials">
-    {list.map((t) => (
-      <figure class="testimonial">
-        <blockquote>{t.quote}</blockquote>
-        <figcaption>
-          <span class="testimonial-name">{t.name}</span>
-          {t.role && <span class="muted">{t.role}</span>}
-        </figcaption>
-      </figure>
-    ))}
-  </div>
-)}
+<div class="testimonials">
+  {list.length > 0
+    ? list.map((t) => (
+        <figure class="testimonial">
+          <blockquote>{t.quote}</blockquote>
+          <figcaption>
+            <span class="testimonial-name">{t.name}</span>
+            {t.role && <span class="muted">{t.role}</span>}
+          </figcaption>
+        </figure>
+      ))
+    : placeholders.map(() => <Awaiting label="A quote from a venue, promoter or fan, with their name and where they saw the band." />)}
+</div>

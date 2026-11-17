@@ -3,9 +3,9 @@
   --bg: #000000;
   --fg: #fbfbf7;
   --muted: #8f8f8a;
-  --band: #1966cb;      /* header bar and ticker */
+  --band: #1966cb;      /* header bar, Live section, buttons on the slider */
   --header-ink: #000000; /* text and logo on the blue header */
-  --accent: #a3ff57;    /* buttons, dates, flags */
+  --accent: #1966cb;    /* buttons, labels, links on hover: same blue as --band (no green) */
   --accent-ink: #000000; /* text on accent */
   --line: #232323;
   --font-display: 'Archivo', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
@@ -43,7 +43,7 @@ img { max-width: 100%; display: block; }
 
 /* Shared all-caps display treatment */
 .caps, h1, h2, .brand, .site-header nav a, .button, .eyebrow,
-.gig-date, .gig-where, .gig-button, .gig-soon, .ticker {
+.gig-date, .gig-venue, .gig-city, .gig-button, .gig-soon, .live-title, .live-more {
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
   font-weight: var(--display-weight);
@@ -357,49 +357,24 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   .slide, .slide.active, .slide > img { transition: none; transform: none; }
 }
 
-/* Ticker */
-.ticker {
-  background: var(--band);
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  letter-spacing: 0.25em;
-  padding: 0.8rem 0;
-}
-.ticker-track { display: inline-flex; animation: ticker 28s linear infinite; }
-.ticker-track span { padding-right: 3rem; }
-.ticker-track span::after { content: '\2605'; padding-left: 3rem; color: var(--accent); }
-@keyframes ticker { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+/* Home page Live band: full-width blue section with black type, like the reference tour list */
+.live-band { background: var(--band); color: #000; padding-block: 2.5rem 3.5rem; margin-top: 4rem; }
+.live-band-inner { max-width: var(--max); margin: 0 auto; padding-inline: 1.5rem; }
+.live-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.live-title { font-size: clamp(3rem, 7vw, 5rem); line-height: 1; letter-spacing: 0; margin: 0 0 1.5rem; color: #000; }
+.live-more { color: #000; font-size: 1.1rem; }
+.live-more:hover { color: #fff; }
 
-/* Next gig */
-.next-gig {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 1.5rem;
-  align-items: end;
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--line);
-}
-.next-gig-date {
-  font-family: var(--font-display);
-  font-stretch: var(--display-stretch);
-  font-weight: var(--display-weight);
-  text-transform: uppercase;
-  font-size: clamp(1.8rem, 5vw, 3.2rem);
-  line-height: 1;
-  letter-spacing: 0.04em;
-  margin: 0.75rem 0 0.4rem;
-}
-.next-gig-venue { font-size: 1.1rem; margin: 0; }
-
-/* Gigs: blue rows with a stacked date block, like the reference tour list */
+/* Gig rows (Live page): blue on black, venue over city. The button column has a fixed width and
+   every button fills it, so columns line up whatever the button says. */
+.gig-list { --gig-button-w: 10.5rem; }
 .gig-list { list-style: none; padding: 0; margin: 0; }
 
 .gig {
   display: grid;
-  grid-template-columns: 5rem 1fr auto;
-  gap: 1.5rem;
+  grid-template-columns: 5rem 1fr var(--gig-button-w);
+  grid-template-areas: 'date venue action' 'date city action';
+  gap: 0 1.5rem;
   align-items: center;
   padding: 1.1rem 1rem;
   border-bottom: 1px solid #333;
@@ -408,19 +383,19 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 }
 .gig:hover { background: #1b1b1b; }
 
-.gig-date { display: flex; flex-direction: column; align-items: center; line-height: 0.95; }
+.gig-date { grid-area: date; display: flex; flex-direction: column; align-items: center; line-height: 0.95; }
 .gig-month { font-size: 1.1rem; }
 .gig-day { font-size: 2.6rem; line-height: 0.9; }
 .gig-year { font-size: 1.05rem; font-weight: 700; }
-.gig-where { display: flex; flex-direction: column; font-size: 1.45rem; line-height: 1.05; }
+.gig-venue { grid-area: venue; align-self: end; font-size: 1.45rem; line-height: 1.05; }
+.gig-city { grid-area: city; align-self: start; font-size: 1.45rem; line-height: 1.05; }
 
-.gig-action { justify-self: end; }
+.gig-action { grid-area: action; justify-self: stretch; text-align: center; }
 .gig-button {
-  display: inline-block;
-  min-width: 9rem;
-  padding: 0.45rem 1.25rem;
-  border: 2px solid var(--band);
-  color: var(--band);
+  display: block;
+  padding: 0.45rem 0.75rem;
+  border: 2px solid currentColor;
+  color: inherit;
   font-size: 1.45rem;
   line-height: 1.1;
   text-align: center;
@@ -429,10 +404,29 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 a.gig-button:hover { background: var(--band); color: #000; }
 .gig-soon { font-size: 1.1rem; opacity: 0.7; }
 
-.gig.cancelled .gig-date, .gig.cancelled .gig-where { opacity: 0.45; text-decoration: line-through; }
+.gig.cancelled .gig-date, .gig.cancelled .gig-venue, .gig.cancelled .gig-city { opacity: 0.45; text-decoration: line-through; }
 .gig.cancelled .gig-button { border-color: var(--muted); color: var(--muted); }
 .gig.past { opacity: 0.5; }
 .gig-empty { padding: 1.1rem 0; color: var(--muted); }
+
+/* Gig rows in the home page band: date | venue | city | link | button, black on blue */
+.gig-list-band .gig {
+  grid-template-columns: 5.5rem minmax(0, 1.3fr) minmax(0, 1fr) 2.5rem var(--gig-button-w);
+  grid-template-areas: 'date venue city link action';
+  gap: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: #000;
+}
+.gig-list-band .gig:hover { background: rgba(255, 255, 255, 0.12); }
+.gig-list-band .gig-venue, .gig-list-band .gig-city { align-self: center; font-size: 1.35rem; line-height: 1.1; }
+.gig-link { grid-area: link; justify-self: center; }
+.gig-link a { display: block; width: 1.6rem; height: 1.6rem; color: inherit; }
+.gig-link a:hover { color: #fff; }
+.gig-link svg { width: 100%; height: 100%; }
+.gig-list-band a.gig-button:hover { background: #000; color: var(--band); }
+.gig-list-band .gig.cancelled .gig-button { border-color: currentColor; color: inherit; opacity: 0.6; }
+.gig-list-band .gig-empty { color: inherit; opacity: 0.7; }
 
 .gig-map { height: 460px; width: 100%; margin: 0 0 2rem; border: 1px solid var(--line); background: #111; }
 .gig-map .leaflet-popup-content { font-family: var(--font-body); }
@@ -452,6 +446,28 @@ a.gig-button:hover { background: var(--band); color: #000; }
   letter-spacing: 0.2em;
   font-size: 0.7rem;
 }
+
+/* "Awaiting content" markers: where the band's own content will go */
+.awaiting {
+  border: 2px dashed rgba(251, 251, 247, 0.35);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+.awaiting-tag {
+  align-self: flex-start;
+  font-family: var(--font-display); font-stretch: var(--display-stretch);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: #000;
+  background: var(--muted);
+  padding: 0.15rem 0.5rem;
+}
+.awaiting p { margin: 0; }
 
 /* Music */
 .setlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem; }
@@ -519,6 +535,9 @@ a.gig-button:hover { background: var(--band); color: #000; }
   line-height: 1;
 }
 .book-banner .button { margin-top: 1rem; }
+/* On the blue banner a blue button would vanish, so it flips to black with blue text. */
+.book-banner .button.primary { background: #000; border-color: #000; color: var(--band); }
+.book-banner .button.primary:hover { background: var(--fg); border-color: var(--fg); color: #000; }
 
 /* Footer */
 .site-footer {
@@ -536,10 +555,12 @@ a.gig-button:hover { background: var(--band); color: #000; }
 .disclaimer { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
 @media (max-width: 760px) {
-  .gig { grid-template-columns: 3.75rem 1fr; gap: 0.6rem 1rem; padding: 1rem 0.5rem; }
+  .gig { grid-template-columns: 3.75rem 1fr; grid-template-areas: 'date venue' 'date city' 'date action'; gap: 0.1rem 1rem; padding: 1rem 0.5rem; }
   .gig-day { font-size: 2.1rem; }
-  .gig-where { font-size: 1.2rem; }
-  .gig-action { grid-column: 2; justify-self: start; }
-  .gig-button { font-size: 1.15rem; min-width: 7.5rem; padding: 0.35rem 1rem; }
-  .next-gig { grid-template-columns: 1fr; }
+  .gig-venue, .gig-city { font-size: 1.2rem; }
+  .gig-action { justify-self: start; margin-top: 0.5rem; }
+  .gig-button { display: inline-block; font-size: 1.15rem; min-width: 7.5rem; padding: 0.35rem 1rem; }
+  .gig-list-band .gig { grid-template-columns: 4rem 1fr auto; grid-template-areas: 'date venue venue' 'date city city' 'date action link'; gap: 0.1rem 1rem; padding: 1rem 0.5rem; }
+  .gig-list-band .gig-venue { font-size: 1.2rem; }
+  .gig-list-band .gig-city { font-size: 1rem; }
 }

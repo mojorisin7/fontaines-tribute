@@ -1,11 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import Testimonials from '../components/Testimonials.astro';
-import testimonials from '../data/testimonials.json';
 ---
 
 <Base title="Testimonials" description="What venues, promoters and fans say about the band.">
   <h1>Testimonials</h1>
-  {testimonials.length === 0 ? <p class="muted">Testimonials coming soon.</p> : <Testimonials />}
+  <p class="lead">What venues, promoters and fans say about the band.</p>
+  <Testimonials />
   <p class="cta-line"><a class="button primary" href="/book">Book the band</a></p>
 </Base>

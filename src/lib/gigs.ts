@@ -7,7 +7,7 @@ export interface Gig {
   date: string; // YYYY-MM-DD
   venue: string;
   city: string;
-  country?: string; // shown after the city; defaults to UK
+  country?: string; // shown after the city; defaults to United Kingdom
   postcode: string;
   lat: number;
   lng: number;
