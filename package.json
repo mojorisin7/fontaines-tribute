@@ -10,7 +10,8 @@
     "add-gig": "node scripts/add-gig.mjs",
     "add-photos": "node scripts/add-photos.mjs",
     "import-gigs": "node scripts/import-gigs.mjs",
-    "preview:deploy": "node scripts/deploy-preview.mjs"
+    "preview:deploy": "node scripts/deploy-preview.mjs",
+    "holding:deploy": "node scripts/deploy-holding.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0",

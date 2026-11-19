@@ -20,7 +20,25 @@ Builds the site as a preview (kept out of search engines) and uploads it
 to the `fontaines-tribute` Cloudflare Pages project on the `preview` branch:
 **https://preview.fontaines-tribute.pages.dev**. The project's Access policy puts an email login in front of it;
 add or remove people in Cloudflare Zero Trust > Access > Applications. Needs `npx wrangler login` once.
-Nothing is deployed to the main `fontaines-tribute.pages.dev` address.
+The main `fontaines-tribute.pages.dev` address shows the holding page (below) until launch.
+
+## Holding page and launch
+
+```bash
+npm run holding:deploy
+```
+
+Uploads `holding/index.html` ("New website coming soon", kept out of search engines) to the
+production branch of the same project, so it is what `fontainestributeband.com` and `.co.uk` show
+once they are added under the project's Custom domains. Every path serves it.
+
+At launch, after the placeholders below are replaced, deploy the real site over it:
+
+```bash
+npm run build && npx wrangler pages deploy dist --project-name fontaines-tribute --branch main
+```
+
+The domains stay attached; only the content changes.
 
 ## Where things live
 
