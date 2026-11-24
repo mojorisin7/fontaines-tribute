@@ -1,8 +1,8 @@
 ---
-// Renders a Leaflet map with one flag per gig.
+// Renders a Leaflet map with one flag per gig: blue for upcoming, grey for past.
 // Gigs are passed in as props, so the same component works whether they come
 // from the JSON file (Tier 1) or from Supabase (Tier 2).
-// Pass every gig: the browser keeps the ones dated today or later (visitor's date).
+// Pass every gig: the browser splits them into upcoming and past by the visitor's date.
 import { formatDate, type Gig } from '../lib/gigs';
 
 interface Props {
@@ -13,10 +13,20 @@ const { gigs } = Astro.props;
 const mapped = gigs
   .filter((g) => g.status !== 'cancelled')
   .map((g) => ({ iso: g.date, venue: g.venue, city: g.city, date: formatDate(g.date), lat: g.lat, lng: g.lng, ticketUrl: g.ticketUrl }));
+
+// Same shape as the map flags, for the key under the map.
+const keyFlag = (fill: string) =>
+  `<svg width="18" height="22" viewBox="0 0 44 54" aria-hidden="true"><line x1="7" y1="3" x2="7" y2="51" stroke="#fbfbf7" stroke-width="5" stroke-linecap="round"/><path d="M8.5 4.5 L40 14 L8.5 24 Z" fill="${fill}" stroke="#fbfbf7" stroke-width="2" stroke-linejoin="round"/></svg>`;
 ---
 
 {mapped.length > 0 && (
-  <div id="gig-map" class="gig-map" role="region" aria-label="Map of upcoming gigs" data-gigs={JSON.stringify(mapped)}></div>
+  <div class="gig-map-wrap">
+    <div id="gig-map" class="gig-map" role="region" aria-label="Map of upcoming and past gigs" data-gigs={JSON.stringify(mapped)}></div>
+    <p class="gig-map-key">
+      <span data-key="upcoming"><Fragment set:html={keyFlag('#1966cb')} /> Upcoming</span>
+      <span data-key="past"><Fragment set:html={keyFlag('#8f8f8a')} /> Past</span>
+    </p>
+  </div>
 )}
 
 <script>
@@ -26,8 +36,14 @@ const mapped = gigs
 
   const el = document.getElementById('gig-map');
   if (el) {
-    const gigs = JSON.parse(el.dataset.gigs || '[]').filter((g: { iso: string }) => g.iso >= today);
-    if (gigs.length === 0) el.hidden = true;
+    type MapGig = { iso: string; venue: string; city: string; date: string; lat: number; lng: number; ticketUrl: string };
+    const gigs: MapGig[] = JSON.parse(el.dataset.gigs || '[]');
+    const isPast = (g: MapGig) => g.iso < today;
+    // Only show key entries for flags that are on the map.
+    for (const span of document.querySelectorAll<HTMLElement>('.gig-map-key [data-key]')) {
+      span.hidden = !gigs.some((g) => isPast(g) === (span.dataset.key === 'past'));
+    }
+
     const map = L.map(el, { scrollWheelZoom: false }).setView([53.8, -1.55], 6);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,27 +51,34 @@ const mapped = gigs
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
-    // Band-blue flag on a dark pole, with a white edge so it stands out on light and busy map areas.
-    const flag = L.divIcon({
-      className: 'flag-pin',
-      html:
-        '<svg width="44" height="54" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg">' +
-        '<line x1="7" y1="3" x2="7" y2="51" stroke="#fff" stroke-width="6" stroke-linecap="round"/>' +
-        '<line x1="7" y1="3" x2="7" y2="51" stroke="#111" stroke-width="3" stroke-linecap="round"/>' +
-        '<path d="M8.5 4.5 L40 14 L8.5 24 Z" fill="#1966cb" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>' +
-        '<circle cx="7" cy="51" r="3" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>',
-      iconSize: [44, 54],
-      iconAnchor: [7, 51],
-      popupAnchor: [14, -46],
-    });
+    // Coloured flag on a dark pole, with a white edge so it stands out on light and busy map areas.
+    const flag = (fill: string) =>
+      L.divIcon({
+        className: 'flag-pin',
+        html:
+          '<svg width="44" height="54" viewBox="0 0 44 54" xmlns="http://www.w3.org/2000/svg">' +
+          '<line x1="7" y1="3" x2="7" y2="51" stroke="#fff" stroke-width="6" stroke-linecap="round"/>' +
+          '<line x1="7" y1="3" x2="7" y2="51" stroke="#111" stroke-width="3" stroke-linecap="round"/>' +
+          `<path d="M8.5 4.5 L40 14 L8.5 24 Z" fill="${fill}" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>` +
+          '<circle cx="7" cy="51" r="3" fill="#111" stroke="#fff" stroke-width="1.5"/></svg>',
+        iconSize: [44, 54],
+        iconAnchor: [7, 51],
+        popupAnchor: [14, -46],
+      });
+    const upcomingFlag = flag('#1966cb');
+    const pastFlag = flag('#8f8f8a');
 
     // Build popups with DOM nodes, not HTML strings, so Tier 2 user input can't inject markup.
-    const popup = (g: { venue: string; city: string; date: string; ticketUrl: string }) => {
+    const popup = (g: MapGig, past: boolean) => {
       const div = document.createElement('div');
       const name = document.createElement('strong');
       name.textContent = g.venue;
       div.append(name, document.createElement('br'), `${g.city}, ${g.date}`);
-      if (g.ticketUrl) {
+      if (past) {
+        const note = document.createElement('em');
+        note.textContent = 'Past gig';
+        div.append(document.createElement('br'), note);
+      } else if (g.ticketUrl) {
         const a = document.createElement('a');
         a.href = g.ticketUrl;
         a.target = '_blank';
@@ -68,7 +91,11 @@ const mapped = gigs
 
     const bounds: [number, number][] = [];
     for (const g of gigs) {
-      L.marker([g.lat, g.lng], { icon: flag, title: g.venue }).addTo(map).bindPopup(popup(g));
+      const past = isPast(g);
+      // Upcoming flags sit on top where a venue has been played before.
+      L.marker([g.lat, g.lng], { icon: past ? pastFlag : upcomingFlag, title: g.venue, zIndexOffset: past ? 0 : 1000 })
+        .addTo(map)
+        .bindPopup(popup(g, past));
       bounds.push([g.lat, g.lng]);
     }
 

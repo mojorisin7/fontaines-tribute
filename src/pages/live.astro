@@ -6,7 +6,7 @@ import { loadGigs, pastGigs } from '../lib/gigs';
 
 // Lists and map get every gig and pick upcoming/past by date (build date, then the visitor's).
 const gigs = loadGigs();
-const pastAtBuild = pastGigs(gigs);
+const pastAtBuild = pastGigs(gigs).filter((g) => g.status !== 'cancelled');
 ---
 
 <Base title="Live" description="Upcoming and past gig dates.">

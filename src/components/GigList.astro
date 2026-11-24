@@ -17,7 +17,10 @@ interface Props {
 const { gigs, past = false, limit, band = false, empty = 'No gigs announced yet.' } = Astro.props;
 const defaultCountry = band ? 'United Kingdom' : 'UK';
 const buildDay = today();
-const ordered = past ? [...gigs].sort((a, b) => b.date.localeCompare(a.date)) : [...gigs].sort((a, b) => a.date.localeCompare(b.date));
+// Cancelled gigs never happened, so the past list leaves them out.
+const ordered = past
+  ? gigs.filter((g) => g.status !== 'cancelled').sort((a, b) => b.date.localeCompare(a.date))
+  : [...gigs].sort((a, b) => a.date.localeCompare(b.date));
 
 // Which rows start visible, as of the build date.
 let shown = 0;
