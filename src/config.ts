@@ -7,7 +7,7 @@ export const site = {
   logo: { image: '/logo/temp-logo.png', main: 'Fontaines', suffix: 'D.C.', tag: 'Tribute' },
   tagline: 'Tribute band tagline goes here. Replace with the client\'s own wording.',
   description: 'A tribute to Fontaines D.C. Live dates, music, videos and booking.',
-  bookingEmail: 'bookings@example.com',
+  bookingEmail: 'bookings@fontainestributeband.com',
   // Footer icons, shown in this order. The email icon uses bookingEmail. Set each href to the
   // band's own profile; remove a line to hide that icon. PLACEHOLDER links until the band sends them.
   socials: [
