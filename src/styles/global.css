@@ -43,7 +43,7 @@ img { max-width: 100%; display: block; }
 
 /* Shared all-caps display treatment */
 .caps, h1, h2, .brand, .site-header nav a, .button, .eyebrow,
-.gig-date, .gig-venue, .gig-city, .gig-button, .gig-soon, .live-title, .live-more {
+.gig-date, .gig-venue, .gig-city, .gig-button, .gig-soon, .live-title, .live-more, .gig-view-toggle button {
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
   font-weight: var(--display-weight);
@@ -430,9 +430,20 @@ a.gig-button:hover { background: var(--band); color: #000; }
 
 .gig-map-wrap { margin: 0 0 2rem; }
 .gig-map { height: 460px; width: 100%; border: 1px solid var(--line); background: #111; }
-.gig-map-key { display: flex; gap: 1.5rem; margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--muted); }
-.gig-map-key span { display: inline-flex; align-items: center; gap: 0.4rem; }
-.gig-map-key svg { display: block; }
+/* Upcoming/Past toggle under the map: two joined buttons that double as the flag key. The selected
+   one is lit with a blue underline (a blue fill would hide the blue flag); the other is dimmed. */
+.gig-view-toggle { display: inline-flex; margin: 0.75rem 0 0; border: 2px solid var(--line); }
+.gig-view-toggle[hidden] { display: none; }
+.gig-view-toggle button {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.1rem; border: 0; background: transparent; color: var(--muted);
+  font-size: 0.72rem; letter-spacing: 0.2em; cursor: pointer; opacity: 0.7;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
+}
+.gig-view-toggle button + button { border-left: 2px solid var(--line); }
+.gig-view-toggle button:hover { color: var(--fg); opacity: 1; }
+.gig-view-toggle button[aria-pressed='true'] { background: #161616; color: var(--fg); opacity: 1; box-shadow: inset 0 -3px 0 var(--accent); }
+.gig-view-toggle svg { display: block; }
 .gig-map .leaflet-popup-content { font-family: var(--font-body); }
 
 .flag-pin { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)); }
