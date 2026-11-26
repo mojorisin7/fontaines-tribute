@@ -47,7 +47,7 @@ The domains stay attached; only the content changes.
 | `src/config.ts` | Band name, tagline, booking email, social links, nav tabs, home slider slides. Set these first. |
 | `src/components/HeroSlider.astro` | Home page 4-slide slider |
 | `src/data/gigs.json` | Gig list. Edit this to add gigs (Tier 1). Sample data for now. `status` is `live`, `sold-out` or `cancelled`. |
-| `src/data/music.json` | Music page: the set grouped by album, plus `listen` links to recordings. Empty for now, so the page shows "Awaiting content" markers. |
+| `src/data/music.json` | Music page: albums (title, release date, cover in `public/music/`), newest first. |
 | `src/data/videos.json` | Videos page: `{ "url": "<any YouTube link>", "title": "..." }` per video. Empty shows placeholders. |
 | `src/data/testimonials.json` | Testimonials page, plus two on Home and Book The Band. Empty for now, so those spots show "Awaiting content" markers. |
 | `src/data/photos.json` | Photos added with `add-photos`. Not shown anywhere yet: the Gallery page was dropped from the client's page list (restore it from git if they take the gallery extra). |
@@ -129,5 +129,4 @@ with the tribute band's own material before the site goes live.
 - **Header logo:** `public/logo/temp-logo.png` (`logo.image` in `src/config.ts`).
 - **Favicons:** `public/favicon-32.png`, `favicon-192.png` and `apple-touch-icon.png`, made from the temp logo.
 - **Band name:** `bandName` in `src/config.ts` is "Fontaines D.C." for now.
-- **Content:** the Music and Testimonials "Awaiting content" markers (fill in `src/data/music.json` and
-  `src/data/testimonials.json`), sample gigs, social links and the booking email.
+- **Content:** the Testimonials "Awaiting content" markers (fill in `src/data/testimonials.json`), sample gigs and social links.

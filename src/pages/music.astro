@@ -1,51 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
-import Awaiting from '../components/Awaiting.astro';
 import music from '../data/music.json';
+import { formatDate } from '../lib/gigs';
 
-// The set the band plays, grouped by album, plus links to the band's own recordings.
+// Album covers in a grid, newest first, laid out like the band's own music page.
 // Edit src/data/music.json:
-//   "setlist": [{ "album": "Album name", "year": 2024, "songs": ["Song", "Song"] }]
-//   "listen":  [{ "label": "Live at the Brudenell", "url": "https://..." }]
-// Until those are filled in, the page shows "Awaiting content" markers.
-interface Album { album: string; year?: number; songs: string[] }
-interface Listen { label: string; url: string }
-const setlist = music.setlist as Album[];
-const listen = music.listen as Listen[];
+//   "releases": [{ "title": "Album name", "date": "YYYY-MM-DD", "cover": "/music/file.webp" }]
+// Covers live in public/music/ (square images, 600-1000px).
+interface Release { title: string; date: string; cover: string }
+const releases = music.releases as Release[];
 ---
 
-<Base title="Music" description="The songs we play live.">
-  <h1>Music</h1>
-  <p class="lead">The songs we play live.</p>
+<Base title="Music" description="The Fontaines D.C. albums we play from.">
+  <h1 class="music-heading">Music</h1>
 
-  <section>
-    <h2>Listen</h2>
-    {listen.length > 0 ? (
-      <div class="listen-links">
-        {listen.map((l) => <a class="button" href={l.url} rel="noopener" target="_blank">{l.label}</a>)}
+  <div class="releases">
+    {releases.map((r) => (
+      <div class="release">
+        <img class="release-cover" src={r.cover} alt={`${r.title} album cover`} width="1000" height="1000" loading="lazy" decoding="async" />
+        <h3 class="release-title">{r.title}</h3>
+        <p class="release-date">{formatDate(r.date, { month: 'long' })}</p>
       </div>
-    ) : (
-      <Awaiting label="Links to the band's recordings, for example Spotify, SoundCloud or YouTube." />
-    )}
-  </section>
-
-  <section>
-    <h2>The set</h2>
-    {setlist.length > 0 ? (
-      <div class="setlist">
-        {setlist.map((a) => (
-          <div class="setlist-album">
-            <p class="setlist-title">{a.album} {a.year && <span class="muted">{a.year}</span>}</p>
-            <ol>
-              {a.songs.map((s) => <li>{s}</li>)}
-            </ol>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <div class="setlist">
-        {[1, 2, 3, 4].map((n) => <Awaiting label={`Album ${n}: album name and the songs played from it.`} />)}
-      </div>
-    )}
-  </section>
+    ))}
+  </div>
 </Base>

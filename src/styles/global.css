@@ -484,21 +484,23 @@ a.gig-button:hover { background: var(--band); color: #000; }
 }
 .awaiting p { margin: 0; }
 
-/* Music */
-.setlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem; }
-.setlist-album { border-top: 2px solid var(--fg); padding-top: 0.75rem; }
-.setlist-title {
+/* Music: square covers in a 3-column grid (1 column on phones), title and date in blue beneath */
+.music-heading { color: var(--accent); }
+.releases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; color: var(--accent); }
+.release { display: flex; flex-direction: column; gap: 0.75rem; }
+.release-cover { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; }
+.release-title {
+  margin: 0;
   font-family: var(--font-display);
   font-stretch: var(--display-stretch);
   font-weight: var(--display-weight);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0 0 0.5rem;
 }
-.setlist-title .muted { letter-spacing: 0.15em; font-size: 0.75rem; margin-left: 0.4rem; }
-.setlist ol { margin: 0; padding-left: 1.4rem; display: grid; gap: 0.25rem; }
-.setlist li::marker { color: var(--accent); font-family: var(--font-display); font-stretch: var(--display-stretch); font-weight: var(--display-weight); font-size: 0.8rem; }
-.listen-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.release-date { margin: 0; opacity: 0.7; }
+@media (max-width: 749px) { .releases { grid-template-columns: 1fr; } }
 
 /* Videos */
 .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }

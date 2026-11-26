@@ -1,4 +1,9 @@
 {
-  "listen": [],
-  "setlist": []
+  "releases": [
+    { "title": "Dopamine Chamber", "date": "2026-10-16", "cover": "/music/dopamine-chamber.webp" },
+    { "title": "Romance", "date": "2024-08-23", "cover": "/music/romance.webp" },
+    { "title": "Skinty Fia", "date": "2022-04-22", "cover": "/music/skinty-fia.webp" },
+    { "title": "A Hero's Death", "date": "2020-07-31", "cover": "/music/a-heros-death.webp" },
+    { "title": "Dogrel", "date": "2019-04-12", "cover": "/music/dogrel.jpg" }
+  ]
 }
