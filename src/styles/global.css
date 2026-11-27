@@ -354,6 +354,12 @@ a.slide-eyebrow-link[hidden] { display: none; }
   .slide-logo-img { height: 3.2rem; width: auto; }
   img.slide-logo-img { filter: invert(1); }
   .slide-title { font-size: clamp(2.4rem, 11vw, 3.4rem); margin-top: 0; }
+  /* One line, sized to the screen: "#1 Fontaines D.C. Tribute Act" is 13.7em wide in Archivo,
+     so (screen width - side padding) / 14.2 fits titles up to about that length. */
+  .slide-title-long { font-size: min(2.4rem, calc((100vw - 3rem) / 14.2)); white-space: nowrap; }
+  /* Tighter buttons so a pair fits side by side on a phone */
+  .hero-actions { gap: 0.6rem; }
+  .hero-slider .button { padding-inline: 1.1rem; }
   .dot[aria-current='true'] { background: #eee; border-color: #eee; }
 }
 

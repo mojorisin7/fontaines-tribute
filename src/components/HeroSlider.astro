@@ -48,7 +48,10 @@ const next = nextGig(gigs);
         )}
         {/* On phones the header has no logo, so it sits here instead (hidden on larger screens). */}
         <div class="slide-logo" aria-hidden="true"><Logo class="slide-logo-img" /></div>
-        {i === 0 ? <h1 class="slide-title">{s.title}</h1> : <p class="slide-title">{s.title}</p>}
+        {/* Long titles get a smaller size on phones so they take about as much room as a short one. */}
+        {i === 0
+          ? <h1 class:list={['slide-title', { 'slide-title-long': s.title.length > 16 }]}>{s.title}</h1>
+          : <p class:list={['slide-title', { 'slide-title-long': s.title.length > 16 }]}>{s.title}</p>}
         {s.text && <p class="slide-text">{s.text}</p>}
         <div class="hero-actions">
           {s.actions.map((a) => (
