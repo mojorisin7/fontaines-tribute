@@ -37,7 +37,7 @@ export const slides = [
     image: '/photos/hero/slide-1-no-text.jpg',
     position: 'center',
     eyebrow: 'next-gig',
-    title: site.bandName,
+    title: '#1 Fontaines D.C. Tribute Act',
     actions: [
       { label: 'Live dates', href: '/live', primary: true },
       { label: 'Book the band', href: '/book' },
