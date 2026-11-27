@@ -22,6 +22,15 @@
 
 html, body { margin: 0; padding: 0; }
 
+/* Never scroll sideways. Full-bleed sections are 100vw wide, which includes the scrollbar where
+   there is one, and the slider's zooming photos can poke past the edge; clip anything wider than
+   the screen. clip (not hidden) keeps the sticky header working; hidden is the fallback for
+   browsers without clip. */
+html { overflow-x: hidden; }
+@supports (overflow: clip) {
+  html, body { overflow-x: clip; }
+}
+
 body {
   background: var(--bg);
   color: var(--fg);
