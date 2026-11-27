@@ -444,7 +444,8 @@ a.gig-button:hover { background: var(--band); color: #000; }
 .gig-list-band .gig.cancelled .gig-button { border-color: currentColor; color: inherit; opacity: 0.6; }
 .gig-list-band .gig-empty { color: inherit; opacity: 0.7; }
 
-.gig-map-wrap { margin: 0 0 2rem; }
+/* isolation keeps Leaflet's own z-indexes (controls are 1000) inside the map, below the sticky header */
+.gig-map-wrap { margin: 0 0 2rem; isolation: isolate; }
 .gig-map { height: 460px; width: 100%; border: 1px solid var(--line); background: #111; }
 /* Upcoming/Past toggle under the map: two joined buttons that double as the flag key. The selected
    one is lit with a blue underline (a blue fill would hide the blue flag); the other is dimmed. */
