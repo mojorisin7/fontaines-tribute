@@ -1,10 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
+import FeaturedVideo from '../components/FeaturedVideo.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import videos from '../data/videos.json';
 
+// The trailer is hosted on the site itself (public/video). Keep video files under 25 MB:
+// that is Cloudflare Pages' limit per file.
+const trailer = {
+  src: '/video/trailer.mp4',
+  poster: '/video/trailer-poster.jpg',
+  title: 'Fontaines C.D. live trailer',
+  width: 1080,
+  height: 1350,
+};
+
 // Edit src/data/videos.json. Each entry: { "url": "https://youtu.be/...", "title": "Starburster, live at the Brudenell" }
-// Any YouTube link works (watch, youtu.be, shorts or embed).
+// Any YouTube link works (watch, youtu.be, shorts or embed). They are shown under the trailer.
 interface Video { url: string; title: string }
 
 const youtubeId = (url: string) =>
@@ -15,23 +26,36 @@ const list = (videos as Video[])
   .filter((v): v is Video & { id: string } => Boolean(v.id));
 ---
 
-<Base title="Videos" description="Live videos of the band.">
+<Base title="Videos" description="Watch Fontaines C.D. live: the band's trailer and live videos.">
   <h1>Videos</h1>
-  {list.length === 0 ? (
-    <>
-      <p class="muted">Videos coming soon.</p>
-      <div class="video-grid">
-        {[1, 2, 3, 4].map((n) => <div class="placeholder video-placeholder">VIDEO {n}</div>)}
+
+  <section class="featured">
+    <FeaturedVideo {...trailer} />
+    <div class="featured-text">
+      <p class="eyebrow">Trailer</p>
+      <h2 class="featured-title">See the show</h2>
+      <p>
+        The lights, the crowd and the songs, played loud. If you want this at your venue, festival
+        or party, get in touch.
+      </p>
+      <div class="featured-actions">
+        <a class="button primary" href="/book">Book the band</a>
+        <a class="button" href="/live">Live dates</a>
       </div>
-    </>
-  ) : (
-    <div class="video-grid">
-      {list.map((v) => (
-        <figure>
-          <VideoEmbed id={v.id} title={v.title} />
-          <figcaption>{v.title}</figcaption>
-        </figure>
-      ))}
     </div>
+  </section>
+
+  {list.length > 0 && (
+    <section>
+      <h2>More videos</h2>
+      <div class="video-grid">
+        {list.map((v) => (
+          <figure>
+            <VideoEmbed id={v.id} title={v.title} />
+            <figcaption>{v.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
   )}
 </Base>

@@ -541,6 +541,39 @@ a.gig-button:hover { background: var(--band); color: #000; }
 }
 .video-play:hover .video-play-icon { background: var(--fg); }
 
+/* Featured (self-hosted) video: large portrait player beside its text, stacked on phones */
+.featured { display: grid; grid-template-columns: minmax(0, 30rem) 1fr; gap: 3rem; align-items: center; }
+.featured-video { position: relative; width: 100%; background: #111; }
+.featured-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.featured-video-play { position: absolute; inset: 0; padding: 0; border: 0; background: rgba(0, 0, 0, 0.3); cursor: pointer; }
+/* Round blue button with a black play triangle, so it stands out on any frame */
+.featured-video-play .video-play-icon {
+  width: 6.5rem; height: 6.5rem;
+  clip-path: none; border-radius: 50%;
+  background: var(--band);
+  border: 3px solid var(--fg);
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.5);
+  transition: transform 0.15s, background 0.15s;
+}
+.featured-video-play .video-play-icon::after {
+  content: ''; position: absolute; inset: 0; margin: auto;
+  width: 2.4rem; height: 2.8rem; transform: translateX(0.25rem);
+  background: #000; clip-path: polygon(0 0, 0 100%, 100% 50%);
+}
+.featured-video-play:hover .video-play-icon,
+.featured-video-play:focus-visible .video-play-icon { background: var(--fg); transform: scale(1.08); }
+.featured-title {
+  font-family: var(--font-display); font-stretch: var(--display-stretch);
+  font-weight: var(--display-weight); text-transform: uppercase;
+  font-size: clamp(2.4rem, 5vw, 3.6rem); line-height: 1; letter-spacing: 0;
+  color: var(--band); margin: 0.5rem 0 1.25rem; padding: 0; border: 0;
+}
+.featured-text p:not(.eyebrow) { line-height: 1.6; max-width: 45ch; margin: 0 0 1.75rem; }
+.featured-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+@media (max-width: 760px) {
+  .featured { grid-template-columns: 1fr; gap: 1.75rem; }
+}
+
 /* Testimonials */
 .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 .testimonial { margin: 0; border-top: 2px solid var(--accent); padding-top: 1rem; display: flex; flex-direction: column; gap: 1rem; }

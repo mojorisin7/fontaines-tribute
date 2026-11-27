@@ -1,0 +1,33 @@
+---
+// Self-hosted video shown large, with the poster and a big play button until pressed.
+// preload="none" means nothing is downloaded until the visitor plays it.
+interface Props {
+  src: string;
+  poster: string;
+  title: string;
+  width: number;
+  height: number;
+}
+
+const { src, poster, title, width, height } = Astro.props;
+---
+
+<div class="featured-video" style={`aspect-ratio: ${width} / ${height}`}>
+  <video src={src} poster={poster} preload="none" playsinline width={width} height={height} aria-label={title}></video>
+  <button type="button" class="featured-video-play" aria-label={`Play video: ${title}`}>
+    <span class="video-play-icon" aria-hidden="true"></span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.featured-video').forEach((el) => {
+    const video = el.querySelector('video')!;
+    const button = el.querySelector('button')!;
+    button.addEventListener('click', () => {
+      video.controls = true;
+      button.hidden = true;
+      video.play();
+      video.focus();
+    });
+  });
+</script>
