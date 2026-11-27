@@ -1,10 +1,9 @@
 // Band-wide settings. Change these once and every page picks them up.
 export const site = {
-  bandName: 'Fontaines D.C.',
+  bandName: 'Fontaines C.D.',
   // Header logo. If `image` is set it is used; otherwise a wordmark is drawn from main/suffix/tag.
-  // PLACEHOLDER: temp-logo.png is the Fontaines D.C. logo, for local preview only.
-  // Replace with the tribute band's own logo before the site goes live.
-  logo: { image: '/logo/temp-logo.png', main: 'Fontaines', suffix: 'D.C.', tag: 'Tribute' },
+  // Black on transparent; the CSS inverts it to white over dark backgrounds.
+  logo: { image: '/logo/fontaines-cd-logo.png', main: 'Fontaines', suffix: 'C.D.', tag: 'Tribute' },
   tagline: 'Tribute band tagline goes here. Replace with the client\'s own wording.',
   description: 'A tribute to Fontaines D.C. Live dates, music, videos and booking.',
   bookingEmail: 'bookings@fontainestributeband.com',

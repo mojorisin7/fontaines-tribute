@@ -126,7 +126,7 @@ with the tribute band's own material before the site goes live.
 
 - **Slider images:** `public/photos/hero/slide-1.jpg` to `slide-4.jpg`, and the `slide-1-no-text.jpg`
   to `slide-3-no-text.jpg` copies with the words painted out. Set in `slides` in `src/config.ts`.
-- **Header logo:** `public/logo/temp-logo.png` (`logo.image` in `src/config.ts`).
+- **Header logo:** `public/logo/fontaines-cd-logo.png` (`logo.image` in `src/config.ts`).
 - **Favicons:** `public/favicon-32.png`, `favicon-192.png` and `apple-touch-icon.png`, made from the temp logo.
-- **Band name:** `bandName` in `src/config.ts` is "Fontaines D.C." for now.
+- **Band name:** `bandName` in `src/config.ts` is "Fontaines C.D.".
 - **Content:** the Testimonials "Awaiting content" markers (fill in `src/data/testimonials.json`), sample gigs and social links.
