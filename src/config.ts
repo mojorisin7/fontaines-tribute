@@ -30,11 +30,14 @@ export const nav = [
 // Home page slider: one entry per slide, shown in order. `position` sets which part of
 // the image stays in view when it is cropped (CSS object-position).
 // eyebrow: 'next-gig' shows "Next stop: <city>, <date>" with a pin, from the next gig in gigs.json.
+// mobileImage (optional) is a tall version of the photo for phones (up to 760px wide), e.g.
+// 1080x2160, with the subject in the top half since the text covers the bottom.
 // PLACEHOLDER IMAGES: slide-1 to slide-4 are Fontaines D.C. artwork, used only to preview
 // the layout locally. Replace with the band's own photos before the site goes live.
 export const slides = [
   {
-    image: '/photos/hero/slide-1-no-text.jpg',
+    image: '/photos/hero/slide-4.jpg',
+    mobileImage: '/photos/hero/slide-4-mobile.jpg',
     position: 'center',
     eyebrow: 'next-gig',
     title: '#1 Fontaines D.C. Tribute Act',
@@ -61,7 +64,7 @@ export const slides = [
     ],
   },
   {
-    image: '/photos/hero/slide-4.jpg',
+    image: '/photos/hero/slide-1-no-text.jpg',
     position: 'center',
     eyebrow: 'Bookings',
     title: 'Book the band',

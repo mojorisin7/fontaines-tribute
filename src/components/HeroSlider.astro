@@ -22,22 +22,26 @@ const next = nextGig(gigs);
       aria-label={`${i + 1} of ${slides.length}`}
       aria-hidden={i === 0 ? undefined : 'true'}
     >
-      <img
-        src={s.image}
-        alt=""
-        style={`object-position: ${s.position}`}
-        loading={i === 0 ? 'eager' : 'lazy'}
-        fetchpriority={i === 0 ? 'high' : undefined}
-      />
+      <picture>
+        {s.mobileImage && <source media="(max-width: 760px)" srcset={s.mobileImage} />}
+        <img
+          class="slide-img"
+          src={s.image}
+          alt=""
+          style={`object-position: ${s.position}`}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : undefined}
+        />
+      </picture>
       <div class="slide-inner">
         {s.eyebrow === 'next-gig' ? (
           candidates.length > 0 && (
-            <p class="slide-eyebrow" data-next-group hidden={!next}>
+            <a class="slide-eyebrow slide-eyebrow-link" href="/live" data-next-group hidden={!next}>
               <svg class="pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor" /></svg>
               {candidates.map((g) => (
                 <span data-date={g.date} hidden={g !== next}>Next stop: {g.city}, {formatDate(g.date, { year: undefined })}</span>
               ))}
-            </p>
+            </a>
           )
         ) : (
           <p class="slide-eyebrow">{s.eyebrow}</p>

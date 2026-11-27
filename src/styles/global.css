@@ -249,7 +249,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   transition: opacity 0.9s ease, visibility 0s linear 0.9s;
 }
 .slide.active { opacity: 1; visibility: visible; transition: opacity 0.9s ease; }
-.slide > img {
+.slide-img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -258,7 +258,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   transform: scale(1.04);
   transition: transform 7s ease-out;
 }
-.slide.active > img { transform: scale(1); }
+.slide.active .slide-img { transform: scale(1); }
 .slide::after {
   content: '';
   position: absolute;
@@ -278,6 +278,10 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
   font-size: clamp(0.95rem, 1.6vw, 1.25rem);
 }
 .slide-eyebrow .pin { width: 1.1em; height: 1.1em; flex: none; }
+/* "Next stop" links to the Live page */
+a.slide-eyebrow-link { width: fit-content; text-decoration: none; }
+a.slide-eyebrow-link:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 0.2em; }
+a.slide-eyebrow-link[hidden] { display: none; }
 .slide-logo { display: none; color: #fff; }
 .slide-title {
   font-family: var(--font-display); font-stretch: var(--display-stretch);
@@ -354,7 +358,7 @@ h2 a { font-size: 0.7rem; letter-spacing: 0.2em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide, .slide.active, .slide > img { transition: none; transform: none; }
+  .slide, .slide.active, .slide-img { transition: none; transform: none; }
 }
 
 /* Home page bio: band photo beside a short paragraph, in the black gap above the Live band.
