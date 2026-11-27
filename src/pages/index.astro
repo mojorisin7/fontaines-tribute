@@ -4,12 +4,28 @@ import GigList from '../components/GigList.astro';
 import HeroSlider from '../components/HeroSlider.astro';
 import Testimonials from '../components/Testimonials.astro';
 import { loadGigs } from '../lib/gigs';
+import { site } from '../config';
 
 const gigs = loadGigs();
 ---
 
 <Base title="Home" overlayHeader>
   <HeroSlider />
+
+  <section class="bio">
+    <img class="bio-photo" src="/photos/band.jpg" width="1400" height="933" alt="The five members of Fontaines C.D. posing against a dark backdrop" loading="lazy" />
+    <div class="bio-text">
+      <h2 class="bio-title">{site.bandName}</h2>
+      {/* PLACEHOLDER bio. Replace with the band's own wording. */}
+      <p>
+        Fontaines C.D. are a five-piece tribute to Fontaines D.C., bringing the raw energy of the
+        Dublin post-punk heroes to stages across the UK. From the early grit of Dogrel to the big
+        choruses of Romance, the set covers every album, played loud and played live, with the look,
+        the swagger and the sound to match.
+      </p>
+      <a class="bio-more" href="/book">Book the band</a>
+    </div>
+  </section>
 
   <section class="live-band full-bleed">
     <div class="live-band-inner">
