@@ -13,6 +13,10 @@ const PROJECT = process.env.CF_PAGES_PROJECT || 'fontaines-tribute';
 const out = mkdtempSync(join(tmpdir(), 'holding-'));
 
 cpSync('holding', out, { recursive: true });
+// Same favicons as the main site.
+for (const icon of ['favicon.ico', 'favicon-32.png', 'favicon-192.png', 'apple-touch-icon.png']) {
+  cpSync(join('public', icon), join(out, icon));
+}
 writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 writeFileSync(join(out, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
 // Every path shows the holding page, so old links don't 404.
