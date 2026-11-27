@@ -6,9 +6,12 @@
 //
 // Sheet columns (header row, any order): Date, Venue, City, Postcode, Ticket link, Status, Country, Notes.
 // Date, Venue, Postcode and Status columns are required. Status is On sale (or blank), Sold out or Cancelled.
+// Gigs outside the UK: fill in Country and City and leave Postcode blank; the map position comes
+// from OpenStreetMap (venue + city, or just the city if the venue isn't found).
 // Every row is checked first; if any row has a problem nothing is saved and each problem is listed.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { lookupPostcodes, normalisePostcode } from './lib/postcodes.mjs';
+import { isUk, lookupPlace } from './lib/places.mjs';
 
 const GIGS = new URL('../src/data/gigs.json', import.meta.url);
 
@@ -136,20 +139,24 @@ body.forEach((cells, i) => {
   if (!get('date')) issues.push('no date');
   else if (!date) issues.push(`date "${get('date')}" not understood (use 5/12/2026 or 2026-12-05)`);
   if (!get('venue')) issues.push('no venue');
-  if (!get('postcode')) issues.push('no postcode');
+  // Gigs abroad have no UK postcode; their map position comes from venue + city instead.
+  const abroad = !isUk(get('country'));
+  if (abroad && !get('city')) issues.push('no city (needed for gigs outside the UK)');
+  if (!abroad && !get('postcode')) issues.push('no postcode');
   const status = STATUS[get('status').toLowerCase()];
   if (!status) issues.push(`status "${get('status')}" should be On sale, Sold out or Cancelled`);
   const tickets = get('tickets');
   if (tickets && !/^https?:\/\//.test(tickets)) issues.push(`ticket link "${tickets}" should start with https://`);
 
   if (issues.length) problems.push(`Row ${rowNo}: ${issues.join('; ')}`);
-  rows.push({ rowNo, date, venue: get('venue'), city: get('city'), postcode: get('postcode'), tickets, status, country: get('country') });
+  rows.push({ rowNo, date, venue: get('venue'), city: get('city'), postcode: get('postcode'), tickets, status, country: get('country'), abroad });
 });
 
 // Postcodes: reuse positions already in gigs.json, look up only new ones.
 const current = JSON.parse(readFileSync(GIGS, 'utf8'));
 const known = new Map(current.map((g) => [normalisePostcode(g.postcode), { postcode: g.postcode, lat: g.lat, lng: g.lng, town: g.city }]));
-const toLookUp = rows.map((r) => r.postcode).filter((pc) => pc && !known.has(normalisePostcode(pc)));
+const ukRows = rows.filter((r) => !r.abroad);
+const toLookUp = ukRows.map((r) => r.postcode).filter((pc) => pc && !known.has(normalisePostcode(pc)));
 if (toLookUp.length) {
   try {
     for (const [pc, place] of await lookupPostcodes(toLookUp)) known.set(pc, place);
@@ -157,8 +164,28 @@ if (toLookUp.length) {
     fail(e.message);
   }
 }
-for (const r of rows) {
+for (const r of ukRows) {
   if (r.postcode && !known.get(normalisePostcode(r.postcode))) problems.push(`Row ${r.rowNo}: postcode "${r.postcode}" not found`);
+}
+
+// Gigs abroad: reuse the position of the same venue already in gigs.json, otherwise look it up.
+const placeKey = (venue, city) => `${venue}|${city}`.toLowerCase();
+const knownPlaces = new Map(current.filter((g) => g.country).map((g) => [placeKey(g.venue, g.city), { lat: g.lat, lng: g.lng }]));
+const roughPlaces = [];
+for (const r of rows.filter((r) => r.abroad && r.venue && r.city)) {
+  const key = placeKey(r.venue, r.city);
+  if (!knownPlaces.has(key)) {
+    let place;
+    try {
+      place = await lookupPlace(r);
+    } catch (e) {
+      fail(e.message);
+    }
+    if (!place) problems.push(`Row ${r.rowNo}: couldn't find "${r.city}, ${r.country}" on the map`);
+    else if (!place.exact) roughPlaces.push(`${r.venue}, ${r.city}`);
+    knownPlaces.set(key, place);
+  }
+  r.place = knownPlaces.get(key);
 }
 
 // The same venue twice on one date is almost always a copy-paste slip.
@@ -184,7 +211,7 @@ let nextId = Math.max(0, ...current.map((g) => g.id)) + 1;
 
 const gigs = rows
   .map((r) => {
-    const place = known.get(normalisePostcode(r.postcode));
+    const place = r.abroad ? { ...r.place, postcode: r.postcode, town: r.city } : known.get(normalisePostcode(r.postcode));
     const existing = byKey.get(`${r.date}|${r.venue.toLowerCase()}`);
     const gig = {
       id: existing?.id ?? nextId++,
@@ -197,7 +224,7 @@ const gigs = rows
       ticketUrl: r.tickets,
       status: r.status,
     };
-    if (r.country && r.country.toUpperCase() !== 'UK') gig.country = r.country;
+    if (r.abroad) gig.country = r.country;
     return gig;
   })
   .sort((a, b) => a.date.localeCompare(b.date) || a.venue.localeCompare(b.venue));
@@ -220,6 +247,7 @@ const section = (title, list) => list.length && console.log(`${title} (${list.le
 section('Added', added);
 section('Changed', changed);
 section('Removed', removed);
+section('Placed in the city centre (venue not found on the map)', roughPlaces);
 const unchanged = gigs.length - added.length - changed.length;
 
 if (!added.length && !changed.length && !removed.length) {
